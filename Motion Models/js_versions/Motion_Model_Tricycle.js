@@ -1,4 +1,4 @@
-class tricycles {
+class tricycle {
 
     constructor(r, d, u, alpha, x, y, theta, L) {
         this.u = u;
@@ -7,7 +7,6 @@ class tricycles {
         this.alpha = alpha;
         this.x = x;
         this.y = y;
-        // Theta MUST be between 
         this.theta = theta;
         this.L = L;
         this.time = 0;
@@ -34,8 +33,8 @@ class tricycles {
         if ( alpha == 0 ) {
             return this.straightMotion(v, x, y, theta, t);
         } else if ( Math.abs(alpha) >= 3.14 ) {
-            // no need to go past pi for turning, also avoids limit theorem problem with the Math.tan() function
-            // in the variable R
+            //No need to go past pi for turning. 
+            //This also avoids the limit theorem problem with the Math.tan() function in the variable R
             return this.straightMotion(-v, x, y, theta, t);
         }
         
@@ -52,9 +51,9 @@ class tricycles {
         let result = this.robotStep(this.r, this.d, this.u, this.alpha, this.x, this.y, this.theta, t_step);
         [this.x, this.y, this.theta] = result;
 
-        console.log(result);
         return result;
 
     }
 
 }
+export default tricycle;

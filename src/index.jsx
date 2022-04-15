@@ -4,23 +4,21 @@ import cycles from '../Motion Models/js_versions/Motion_Model_Bicycle'
 
 class App extends React.Component {
   /*TO SUMMARIZE, THE APP CLASS MANAGES ALL STATE CHANGES AND ACTS ALMOST LIKE A PARENT CLASS. THE TERM 'CLASS' AND 'COMPONENT' ARE USED
-  INTERCHANGEABLY. ALL STATE CHANGES ARE MADE, HOWEVER, BY CHILD CLASSES VIA EVENT HANDLERS. THINK ENCAPSULATION FROM COMP401.*/
-//
+  INTERCHANGEABLY. ALL STATE CHANGES ARE MADE, HOWEVER, BY "CHILD" CLASSES VIA EVENT HANDLERS. THINK ENCAPSULATION FROM COMP401.*/
+  //Also, the constructor(props) {super(props)} syntax is honestly just a formality,
   constructor(props) {
     super(props);
     this.state = {
-      default: true,
-      filterText: '',
       page: '',
       degree: 0,
-      AngularVelocity: 0,
-      distance_between_wheels: 0,
-      left_angular_velocity: 0,
-      right_angular_velocity: 0,
-      left_wheel_radius: 0,
-      right_wheel_radius: 0,
-      fRadius: 0,
-      DistFrontToBack: 0,
+      angularVelocity: 0,
+      distanceBetweenWheels: 0,
+      leftAngularVelocity: 0,
+      rightAngularVelocity: 0,
+      leftWheelRadius: 0,
+      rightWheelRadius: 0,
+      frontWheelRadius: 0,
+      distFrontToBack: 0,
     };
   
     this.toggleButton = this.toggleButton.bind(this);
@@ -30,7 +28,7 @@ class App extends React.Component {
     this.handleAngularVelocityChange = this.handleAngularVelocityChange.bind(this);
     this.handleFrontWheelRadiusChange = this.handleFrontWheelRadiusChange.bind(this)
     this.handleDistB2WChange = this.handleDistB2WChange.bind(this)
-    //Diff. Drive Fields
+    //Handlng changes in differntial drive parameters
     this.handleDistBetweenWheelsChange = this.handleDistBetweenWheelsChange.bind(this);
     this.handleLeftAngularVelocityChange = this.handleLeftAngularVelocityChange.bind(this);
     this.handleRightAngularVelocityChange = this.handleRightAngularVelocityChange.bind(this);
@@ -43,14 +41,14 @@ class App extends React.Component {
   toggleButton2 = () => {
     this.setState({
       degree: 0,
-      AngularVelocity: 0,
-      distance_between_wheels: 0,
-      left_angular_velocity: 0,
-      right_angular_velocity: 0,
-      left_wheel_radius: 0,
-      right_wheel_radius: 0,
-      fRadius: 0,
-      DistFrontToBack: 0,
+      angularVelocity: 0,
+      distanceBetweenWheels: 0,
+      leftAngularVelocity: 0,
+      rightAngularVelocity: 0,
+      leftWheelRadius: 0,
+      rightWheelRadius: 0,
+      frontWheelRadius: 0,
+      distFrontToBack: 0,
       last_position: [],
     }, () => {
       console.log('');
@@ -67,47 +65,47 @@ class App extends React.Component {
     });
   }
   handleDistBetweenWheelsChange = (num) => {
-    this.setState({ distance_between_wheels: num }, () => {
+    this.setState({ distanceBetweenWheels: num }, () => {
       console.log('');
     });
   }
   handleLeftAngularVelocityChange = (num) => {
-    this.setState({ left_angular_velocity: num }, () => {
+    this.setState({ leftAngularVelocity: num }, () => {
       console.log('');
     });
   }
   handleRightAngularVelocityChange = (num) => {
-    this.setState({ right_angular_velocity: num }, () => {
+    this.setState({ rightAngularVelocity: num }, () => {
       console.log('');
     });
   }
   handleLeftWheelRadiusChange = (num) => {
-    this.setState({ left_wheel_radius: num }, () => {
+    this.setState({ leftWheelRadius: num }, () => {
       console.log('');
     });
   }
   handleRightWheelRadiusChange = (num) => {
-    this.setState({ right_wheel_radius: num }, () => {
+    this.setState({ rightWheelRadius: num }, () => {
       console.log('');
     });
   }
   handleDistF2BChange = (num) => {
-    this.setState({ DistFrontToBack: num }, () => {
+    this.setState({ distFrontToBack: num }, () => {
       console.log('');
     });
   }
   handleAngularVelocityChange = (num) => {
-    this.setState({ AngularVelocity: num }, () => {
+    this.setState({ angularVelocity: num }, () => {
       console.log('');
     });
   }
   handleDistB2WChange = (num) => {
-    this.setState({ DistBackTwoWheels: num }, () => {
+    this.setState({ distBackTwoWheels: num }, () => {
       console.log('');
     });
   }
   handleFrontWheelRadiusChange = (num) => {
-    this.setState({ fRadius: num }, () => {
+    this.setState({ frontWheelRadius: num }, () => {
       console.log('');
     });
   }
