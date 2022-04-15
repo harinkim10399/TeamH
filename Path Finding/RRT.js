@@ -1,5 +1,5 @@
-import {tree, node} from "/Tree_Struct/treeAll.js";
-
+import tree from '../Path Finding/Tree_Struct/treeAll.js';
+import node from '../Path Finding/Tree_Struct/treeAll.js';
 class RRT {
 
     constructor (start, goal, step_size, collision_resolution, goal_resolution, goal_biasing, obstacles, environment_boundaries) {

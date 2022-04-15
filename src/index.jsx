@@ -455,7 +455,7 @@ class Canvas extends React.Component {
       if (startCoord != undefined && goalCoord != undefined) {
 
         //tree = new RRT(startCoord, goalCoord, step_size, collision_resolution, goal_resolution, goal_biasing, obstacles, environment_boundaries);
-        tree = new RRT(startCoord, goalCoord, 5, collision_resolution, goal_resolution, goal_biasing, obstacles, environment_boundaries);
+        //tree = new RRT(startCoord, goalCoord, 5, collision_resolution, goal_resolution, goal_biasing, obstacles, environment_boundaries);
       }
     });
     //Does:  
@@ -487,47 +487,7 @@ class Canvas extends React.Component {
     }
 
 
-    //Does: test branch algo No actual just some BS
-    function branch(x, y) {
-      if (x > 7000) {
-        return;
-      }
 
-      if (x < -400) {
-        return;
-      }
-
-
-      //dot
-      context.beginPath();
-      context.arc(x, y, 5, 0, 2 * Math.PI);
-      context.fillStyle = 'green';
-      context.fill()
-      //split 
-
-      //branch 
-      setTimeout(() => {
-        if (!detectPixel(x + 20, y - 60)) {
-          context.lineWidth = 2;
-          context.strokeStyle = 'yellow';
-          context.beginPath();
-          context.moveTo(x, y);
-          context.lineTo(x + 20, y - 60);
-          context.stroke();
-          branch(x + 20, y - 60);
-        }
-
-        if (!detectPixel(x + 30, y + 20)) {
-          context.lineWidth = 2;
-          context.strokeStyle = 'red';
-          context.beginPath();
-          context.moveTo(x, y);
-          context.lineTo(x + 30, y + 20);
-          context.stroke();
-          branch(x + 30, y + 20);
-        }
-      }, 1000);
-    }
   }
 
 
