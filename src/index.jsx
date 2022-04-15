@@ -1,6 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import cycles from '../Motion Models/js_versions/Motion_Model_Bicycle'
+import cycles from '../Motion Models/js_versions/Motion_Model_Bicycle';
+import RRT from '../Path Finding/RRT';
 
 class App extends React.Component {
   /*TO SUMMARIZE, THE APP CLASS MANAGES ALL STATE CHANGES AND ACTS ALMOST LIKE A PARENT CLASS. THE TERM 'CLASS' AND 'COMPONENT' ARE USED
@@ -264,6 +265,11 @@ class Canvas extends React.Component {
     var setStart = false;
     var startCoord;
 
+    //set values for playing
+    var play = false;
+    let tree = null;
+
+
     //Does: Creates new array for new object points per object
 
     //Does: deletes all obstacles
@@ -446,24 +452,41 @@ class Canvas extends React.Component {
     }
     //Does: Plays algo
     $('#play').click(function () {
-      if (startCoord != undefined) {
-        branch(startCoord.x, startCoord.y);
+      if (startCoord != undefined && goalCoord != undefined) {
+
+        //tree = new RRT(startCoord, goalCoord, step_size, collision_resolution, goal_resolution, goal_biasing, obstacles, environment_boundaries);
+        tree = new RRT(startCoord, goalCoord, 5, collision_resolution, goal_resolution, goal_biasing, obstacles, environment_boundaries);
       }
     });
     //Does:  
     $('#reset').click(function () {
       if (startCoord != undefined) {
-        branch(startCoord.x, startCoord.y);
+        //branch(startCoord.x, startCoord.y);
       }
     });
 
     //Does: Detects pixel and returns true if it is blank 
-    function detectPixel(x, y) {
+    function isOpenPixel(x, y) {
       var pixel = context.getImageData(x, y, 1, 1).data;
       if (pixel[2] == 255 || pixel[3] == 255) {
         return true;
       }
     }
+
+    function detectLineOfPixels() {
+      //figure out what points to search 
+      var searchCoords = [];
+
+
+      if (isOpenPixel(x, y)) {
+
+      } else {
+        return false;
+      }
+
+    }
+
+
     //Does: test branch algo No actual just some BS
     function branch(x, y) {
       if (x > 7000) {
