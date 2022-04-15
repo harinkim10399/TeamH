@@ -38,16 +38,11 @@ class RRT {
 
     step(p, T, step) {
         let n = this.findNearest(p, T);
-        let d = distance(p, T);
+        let d = this.distance(p, T);
         let direction = [(p[0] - n.x)/d + step, (p[1] - n.y)/d] + step;
 
-        let new_n = node(n.getX() + direction[0], n.getY() + direction[1], n);
+        let new_n = new node(n.getX() + direction[0], n.getY() + direction[1], n);
         return new_n;
-
-    }
-    
-    // check perimeter only
-    collision(n, T, perimeter) {
 
     }
 
@@ -67,6 +62,7 @@ class RRT {
 
     // firs step in algorithm process
     // selects random point, creates and returns node for collision evalution
+
     randomCheck () {
 
         let sample;
@@ -86,6 +82,7 @@ class RRT {
     // second steps if there is collision
     // severes node and is collected by garbage collection
     // returns basic string
+
     collide (n) {
         n.prev = null;
         return "again";
