@@ -438,20 +438,10 @@ class Canvas extends React.Component {
       context.stroke();
     }
 
-    //Does: Draw Goal and Start
-    function drawGoalAndStart() {
-      context.beginPath();
-      context.arc(startCoord.x, startCoord.y, 30, 0, 2 * Math.PI);
-      context.fillStyle = 'blue';
-      context.fill()
 
-      context.beginPath();
-      context.arc(goalCoord.x, goalCoord.y, 30, 0, 2 * Math.PI);
-      context.fillStyle = 'yellow';
-      context.fill()
-    }
     //Does: Plays algo
     $('#play').click(function () {
+      detectLineOfPixels()
       if (startCoord != undefined && goalCoord != undefined) {
 
         //tree = new RRT(startCoord, goalCoord, step_size, collision_resolution, goal_resolution, goal_biasing, obstacles, environment_boundaries);
@@ -474,15 +464,69 @@ class Canvas extends React.Component {
     }
 
     function detectLineOfPixels() {
+
+      //alert();
+      //calculate slope maybe shouldnt madder but make fpos smaller
+      var fpos = [133, 133];
+      var epos = [400, 300];
+
+
+      context.beginPath();
+      context.arc(epos[0], epos[1], 5, 0, 2 * Math.PI);
+      context.stroke()
+
+      context.beginPath();
+      context.arc(fpos[0], fpos[1], 5, 0, 2 * Math.PI);
+      context.stroke();
+
+      var slope = (fpos[1] - epos[1]) / (fpos[0] - epos[0]);
+      //console.log(slope);
+      //calc b 
+      var yintercept = fpos[1] - slope * fpos[0];
+
+      //console.log(yintercept);
+
+      //distance formula to determine scalar
+      var scalar = 1;
+      var c = 9999;
+      //scaler should get distance every 8 distance 
+      while (c > 8) {
+        //distance from firstposition to new scaled one
+        var newx = epos[0] * scalar + fpos[0];
+
+        var newy = (slope * newx) + yintercept;
+        // console.log(newx, newy);
+        context.strokeStyle = 'red';
+        context.beginPath();
+        context.arc(newx, newy, 3, 0, 2 * Math.PI);
+        context.stroke();
+
+
+        var a = fpos[0] - newx;
+        var b = fpos[1] - newy;
+        //console.log(scalar);
+
+
+        //reduce scalar
+        scalar = scalar / 2;
+        //checl if the the distance is actually increasing
+        if (c < Math.sqrt(a * a + b * b)) {
+          alert("wrong way");
+          break;
+        }
+        c = Math.sqrt(a * a + b * b);
+        //console.log(c + " " + scalar)
+      }
+
+
+      //alert("done");
       //figure out what points to search 
       var searchCoords = [];
+      // if (isOpenPixel(x, y)) {
 
-
-      if (isOpenPixel(x, y)) {
-
-      } else {
-        return false;
-      }
+      // } else {
+      //   return false;
+      // }
 
     }
 
