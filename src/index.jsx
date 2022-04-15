@@ -5,7 +5,7 @@ import cycles from '../Motion Models/js_versions/Motion_Model_Bicycle'
 class App extends React.Component {
   /*TO SUMMARIZE, THE APP CLASS MANAGES ALL STATE CHANGES AND ACTS ALMOST LIKE A PARENT CLASS. THE TERM 'CLASS' AND 'COMPONENT' ARE USED
   INTERCHANGEABLY. ALL STATE CHANGES ARE MADE, HOWEVER, BY CHILD CLASSES VIA EVENT HANDLERS. THINK ENCAPSULATION FROM COMP401.*/
-//
+  //
   constructor(props) {
     super(props);
     this.state = {
@@ -22,7 +22,7 @@ class App extends React.Component {
       fRadius: 0,
       DistFrontToBack: 0,
     };
-  
+
     this.toggleButton = this.toggleButton.bind(this);
     this.toggleButton2 = this.toggleButton2.bind(this);
     this.handleDegreeChange = this.handleDegreeChange.bind(this);
@@ -39,7 +39,7 @@ class App extends React.Component {
 
 
   }
-  
+
   toggleButton2 = () => {
     this.setState({
       degree: 0,
@@ -217,7 +217,7 @@ class Canvas extends React.Component {
     super(props);
 
   }
- 
+
   //THIS IS WHERE YOU PUT YOUR JAVASCRIPT/JQUERY CODE FOR MOTION MODELS/PATHFINDING ALGORITHMS!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
   jQueryCodeRET = () => {
 
@@ -561,39 +561,54 @@ class Canvas extends React.Component {
     //Do: 
     //Degree to radians
     // remainder to 360
-    var degre = (this.props.degre % 360)
 
 
-    var DistFrontToBack = this.props.DistFrontToBack;
-    var fRadius = this.props.fRadius;
-    var AngularVelocity = this.props.AngularVelocity;
-
-    if (degre == 0) {
-      //degre = 1;
-    }
-    if (isNaN(DistFrontToBack)) {
-      DistFrontToBack = 30;
-    }
-    if (isNaN(fRadius)) {
-      fRadius = 10;
-    }
-    if (isNaN(AngularVelocity)) {
-      AngularVelocity = 0;
-    }
 
 
-    var radians = 0;
-    // convert to neg when greater than 180
-    if (degre > 180) {
-      degre = degre - 360;
-    }
-    radians = degre * Math.PI / 180;
-
+    //updateParameters()
     var startX = canvas.width / 2;
     var startY = canvas.height / 4;
     var bikeBodyAngle = 0;
     var notUsedForBikeVariable = 0;
+    //const bike = new cycles(fRadius, DistFrontToBack, AngularVelocity, radians, startX, startY, bikeBodyAngle, notUsedForBikeVariable);
 
+
+
+
+    function updateParameters() {
+      var degre = document.getElementById("degree");
+      if (degre != null) {
+        degre = degre.value;
+        alert(degre);
+        degre = degre % 360
+      }
+
+
+      var DistFrontToBack = this.props.DistFrontToBack;
+      var fRadius = this.props.fRadius;
+      var AngularVelocity = this.props.AngularVelocity;
+
+      if (degre == 0) {
+        //degre = 1;
+      }
+      if (isNaN(DistFrontToBack)) {
+        DistFrontToBack = 30;
+      }
+      if (isNaN(fRadius)) {
+        fRadius = 10;
+      }
+      if (isNaN(AngularVelocity)) {
+        AngularVelocity = 0;
+      }
+
+
+      var radians = 0;
+      // convert to neg when greater than 180
+      if (degre > 180) {
+        degre = degre - 360;
+      }
+      radians = degre * Math.PI / 180;
+    }
     $('#play').click(function () {
       //alert("Play functionality must be implemented")
       proceed = true;
@@ -601,15 +616,21 @@ class Canvas extends React.Component {
     $('#pause').click(function () {
       //alert("Play functionality must be implemented")
       proceed = false;
+      var degre = document.getElementById("degree");
+      if (degre != null) {
+        degre = degre.value;
+        alert(degre);
+        degre = degre % 360
+      }
     })
 
 
-    const bike = new cycles(fRadius, DistFrontToBack, AngularVelocity, radians, startX, startY, bikeBodyAngle, notUsedForBikeVariable);
+
     //Does: Flips canvas to correct orientation
     ctx.transform(1, 0, 0, -1, 0, canvas.height);
 
     function concept() {
-      
+
       //Does: Sets Focul point to center of canvas
 
 
@@ -632,13 +653,13 @@ class Canvas extends React.Component {
 
         // draw a rotated rect
         var Cpos = bike.main();
-    
+
         startX = Cpos[0];
         startY = Cpos[1];
         var theta = Cpos[2] - Math.PI / 2;
         drawWheel(startX, startY, fRadius * 2, DistFrontToBack / 4, degre, theta, DistFrontToBack);
         drawBody(startX, startY, DistFrontToBack, DistFrontToBack / 4, theta);
-      
+
       }
       //check rotation
       //bodyCenter(startX, startY);
@@ -676,7 +697,7 @@ class Canvas extends React.Component {
         ctx.translate(x, y);
         // rotate the rect
         //ctx.rotate(theta);
-      
+
         ctx.rotate(theta);
 
         // draw the rect on the transformed context
@@ -737,7 +758,8 @@ class Canvas extends React.Component {
       //window.requestAnimationFrame(concept);
     }
 
-    window.requestAnimationFrame(concept);
+
+    // window.requestAnimationFrame(concept);
   }
 
   jQueryCodeTricycle = () => {
