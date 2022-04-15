@@ -455,13 +455,22 @@ class Canvas extends React.Component {
       }
     });
 
-    //Does: Detects pixel and returns true if it is blank 
+    //Does: Detects red pixel and returns true if it is not red 
     function isOpenPixel(x, y) {
-      var pixel = context.getImageData(x, y, 1, 1).data;
-      if (pixel[2] == 255 || pixel[3] == 255) {
+      var p = context.getImageData(x, y, 1, 1).data;
+
+      //alert(p[0] + " " + p[1] + " " + p[2]);
+      if (p[0] == 255 && p[1] == 0 && p[2] == 0) {
+        return false;
+      } else {
         return true;
       }
+
+
     }
+
+
+
 
     function detectLineOfPixels() {
 
@@ -486,7 +495,7 @@ class Canvas extends React.Component {
         spos = temp
       }
 
-
+      context.strokeStyle = "blue";
       context.beginPath();
       context.arc(epos[0], epos[1], 5, 0, 2 * Math.PI);
       context.stroke()
@@ -512,10 +521,10 @@ class Canvas extends React.Component {
 
         var newy = (slope * newx) + yintercept;
         // console.log(newx, newy);
-        context.strokeStyle = 'red';
-        context.beginPath();
-        context.arc(newx, newy, 3, 0, 2 * Math.PI);
-        context.stroke();
+        // context.strokeStyle = 'red';
+        // context.beginPath();
+        // context.arc(newx, newy, 3, 0, 2 * Math.PI);
+        // context.stroke();
 
 
         var a = spos[0] - newx;
@@ -543,20 +552,24 @@ class Canvas extends React.Component {
       while (tempx < epos[0]) {
         tempx = epos[0] * scalar + secondScaler + spos[0];
         var tempy = (slope * tempx) + yintercept;
-        console.log(tempy)
 
-        context.strokeStyle = 'green';
-        context.beginPath();
-        context.arc(tempx, tempy, 2, 0, 2 * Math.PI);
-        context.stroke();
+        //if not open pixel return false meaning collision
+        if (!isOpenPixel(tempx, tempy)) {
+
+          return false;
+        }
+        // context.strokeStyle = 'green';
+        // context.beginPath();
+        // context.arc(tempx, tempy, 2, 0, 2 * Math.PI);
+        // context.stroke();
+
+
         secondScaler += 5;
+
+
       }
-      // if (isOpenPixel(x, y)) {
 
-      // } else {
-      //   return false;
-      // }
-
+      return true;
     }
 
 
