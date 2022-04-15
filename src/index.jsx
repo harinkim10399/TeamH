@@ -466,9 +466,25 @@ class Canvas extends React.Component {
     function detectLineOfPixels() {
 
       //alert();
-      //calculate slope maybe shouldnt madder but make fpos smaller
-      var fpos = [133, 133];
-      var epos = [400, 300];
+      //calculate slope maybe shouldnt madder but make spos smaller
+      var spos = [400, 300];
+      var epos = [133, 133];
+
+      //spos must always be smaller
+      var a1 = 0 - spos[0];
+      var b1 = 0 - spos[1];
+      var c1 = Math.sqrt(a1 * a1 + b1 * b1);
+
+      var a2 = 0 - epos[0];
+      var b2 = 0 - epos[1];
+      var c2 = Math.sqrt(a2 * a2 + b2 * b2);
+
+      //if spos is bigger swap
+      if (c1 > c2) {
+        var temp = epos;
+        epos = spos;
+        spos = temp
+      }
 
 
       context.beginPath();
@@ -476,13 +492,13 @@ class Canvas extends React.Component {
       context.stroke()
 
       context.beginPath();
-      context.arc(fpos[0], fpos[1], 5, 0, 2 * Math.PI);
+      context.arc(spos[0], spos[1], 5, 0, 2 * Math.PI);
       context.stroke();
 
-      var slope = (fpos[1] - epos[1]) / (fpos[0] - epos[0]);
+      var slope = (spos[1] - epos[1]) / (spos[0] - epos[0]);
       //console.log(slope);
       //calc b 
-      var yintercept = fpos[1] - slope * fpos[0];
+      var yintercept = spos[1] - slope * spos[0];
 
       //console.log(yintercept);
 
@@ -492,7 +508,7 @@ class Canvas extends React.Component {
       //scaler should get distance every 8 distance 
       while (c > 8) {
         //distance from firstposition to new scaled one
-        var newx = epos[0] * scalar + fpos[0];
+        var newx = epos[0] * scalar + spos[0];
 
         var newy = (slope * newx) + yintercept;
         // console.log(newx, newy);
@@ -502,8 +518,8 @@ class Canvas extends React.Component {
         context.stroke();
 
 
-        var a = fpos[0] - newx;
-        var b = fpos[1] - newy;
+        var a = spos[0] - newx;
+        var b = spos[1] - newy;
         //console.log(scalar);
 
 
@@ -522,6 +538,19 @@ class Canvas extends React.Component {
       //alert("done");
       //figure out what points to search 
       var searchCoords = [];
+      var secondScaler = 0;
+      var tempx = spos[0];
+      while (tempx < epos[0]) {
+        tempx = epos[0] * scalar + secondScaler + spos[0];
+        var tempy = (slope * tempx) + yintercept;
+        console.log(tempy)
+
+        context.strokeStyle = 'green';
+        context.beginPath();
+        context.arc(tempx, tempy, 2, 0, 2 * Math.PI);
+        context.stroke();
+        secondScaler += 5;
+      }
       // if (isOpenPixel(x, y)) {
 
       // } else {
