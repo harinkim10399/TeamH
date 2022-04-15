@@ -65,6 +65,8 @@ class RRT {
         }
     }
 
+    // firs step in algorithm process
+    // selects random point, creates and returns node for collision evalution
     randomCheck () {
 
         let sample;
@@ -81,10 +83,17 @@ class RRT {
 
     }
 
+    // second steps if there is collision
+    // severes node and is collected by garbage collection
+    // returns basic string
     collide (n) {
         n.prev = null;
+        return "again";
     }
 
+    // second step if there is no collision
+    // pass node from randomCheck
+    // will return string if not finished and array of nodes [end -> start] if finished
     move(n) {
         
         this.T.insert(n);
