@@ -725,7 +725,7 @@ class Canvas extends React.Component {
         break;
     }
   }
-  //using JQuery code when you re-render (update) the Canvas Component
+  //using JQuery code when you re-render (update) the Canvas Component.
   componentDidUpdate() {
     switch (this.props.jQuery) {
       case "RET":
