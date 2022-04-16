@@ -3,7 +3,7 @@ import {tree, node} from '../Path Finding/Tree_Struct/treeAll.js';
 class RRT {
 
     constructor (start, goal, step_size, collision_resolution, goal_resolution, goal_biasing, environment_boundaries) {
-        // start -> starting coordinates of player
+        // start -> starting coordinates of player in size 2 array (all coordinates use the formating)
         this.start = start;
         // goal -> premade node on front end (this will change later to just using cartesian coordinats)
         this.goal = goal;
@@ -11,7 +11,8 @@ class RRT {
         this.step_size = step_size;
         // collision_resultion -> may be removed later, for now just place 0
         this.collision_resolution = collision_resolution;
-        // goal_resolution -> distance from the goal required to say the boal has been reached
+        // goal_resolution -> distance from the goal required to say the boal has been reached (number between 0-1 for now)
+        // more changes later
         this.goal_resolution = goal_resolution;
         // goal_biasing -> number between 0-1 (double) that makes path add node towards the goal
         this.goal_biasing = goal_biasing;
