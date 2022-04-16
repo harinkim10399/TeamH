@@ -4,8 +4,9 @@ import cycles from '../Motion Models/js_versions/Motion_Model_Bicycle'
 
 class App extends React.Component {
   /*TO SUMMARIZE, THE APP CLASS MANAGES ALL STATE CHANGES AND ACTS ALMOST LIKE A PARENT CLASS. THE TERM 'CLASS' AND 'COMPONENT' ARE USED
-  INTERCHANGEABLY. ALL STATE CHANGES ARE MADE, HOWEVER, BY "CHILD" CLASSES VIA EVENT HANDLERS. THINK ENCAPSULATION FROM COMP401.*/
-  //Also, the constructor(props) {super(props)} syntax is honestly just a formality.
+  INTERCHANGEABLY. ALL STATE CHANGES ARE MADE, HOWEVER, BY "CHILD" CLASSES VIA EVENT HANDLERS. THINK ENCAPSULATION FROM COMP401.
+  Also, the constructor(props) {super(props)} syntax is not just a formality. You cannot use this keyword methods without calling the parent
+  constructor, which in this case is the React.Component class. */
   constructor(props) {
     super(props);
     this.state = {
