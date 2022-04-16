@@ -2,24 +2,38 @@ import {tree, node} from "/Tree_Struct/treeAll.js";
 
 class RRT {
 
-    constructor (start, goal, step_size, collision_resolution, goal_resolution, goal_biasing, obstacles, environment_boundaries) {
+    constructor (start, goal, step_size, collision_resolution, goal_resolution, goal_biasing, environment_boundaries) {
+        // start -> starting coordinates of player
         this.start = start;
+        // goal -> premade node on front end (this will change later to just using cartesian coordinats)
         this.goal = goal;
+        // step_size -> size of step taken with each iteration of movement (straight number / integer)
         this.step_size = step_size;
+        // collision_resultion -> may be removed later, for now just place 0
         this.collision_resolution = collision_resolution;
+        // goal_resolution -> distance from the goal required to say the boal has been reached
         this.goal_resolution = goal_resolution;
+        // goal_biasing -> number between 0-1 (double) that makes path add node towards the goal
         this.goal_biasing = goal_biasing;
-        this.obstacles = obstacles;
+        // environment_boundaries -> bounderies of the environment the algorithm uses to select
+        // random point to return to the front end
         this.environment_boundaries = environment_boundaries;
-        this.T = new tree();
-        this.root = new node(start[0], start[1], null);
+        // Basic creation and initialization of new tree
+        this.T = new tree(new node(start[0], start[1], null));
     }
 
-
-    distance(p, q) {
-        return Math.sqrt( Math.pow(p[0]-q[0], 2) + Math.pow(p[1]-q[1], 2) );
+    // uses pathagorian theorem to find distance
+    // inputs:
+    // p -> passed randomly generated point on canvas
+    // n -> nearest found node to point
+    distance(p, n) {
+        return Math.sqrt( Math.pow(p[0]-n.getX(), 2) + Math.pow(p[1]-n.getY(), 2) );
     }
     
+    // find nearest node to new node using distance calculations
+    // inputs:
+    // p -> passed randomly generated point on canvas
+    // T -> tree the nodes are in
     findNearest(p, T) {
         min_dist = 0;
         let n = T.nodes[0];
@@ -36,10 +50,15 @@ class RRT {
         return n;
     }
 
+    // takes "step" towards randomly selected position
+    // inputs:
+    // p -> passed randomly generated point on canvas
+    // T -> tree the nodes are in
+    // step -> step_size given by constructor
     step(p, T, step) {
         let n = this.findNearest(p, T);
-        let d = this.distance(p, T);
-        let direction = [(p[0] - n.x)/d + step, (p[1] - n.y)/d] + step;
+        let d = this.distance(p, n);
+        let direction = [(p[0] - n.getX())/d + step, (p[1] - n.getY())/d] + step;
 
         let new_n = new node(n.getX() + direction[0], n.getY() + direction[1], n);
         return new_n;
@@ -66,14 +85,14 @@ class RRT {
     randomCheck () {
 
         let sample;
-        let range = Math.random();
-        if ( range < this.goal_biasing ) {
+        
+        if ( Math.random() < this.goal_biasing ) {
             sample = [this.goal.getX(), this.goal.getY()];
         } else {
             sample = this.sampleRandom();
         }
 
-        let new_node = step(sample, this.T, this.step_size);
+        let new_node = this.step(sample, this.T, this.step_size);
 
         return new_node;
 
@@ -96,9 +115,8 @@ class RRT {
         this.T.insert(n);
         let left = [n.getX(), n.getY()];
         let right = [this.goal.getX(), this.goal.getY()];
-        let compare = this.distance(left, right);
-                    
-        if ( compare[0] < this.goal_biasing && compare[1] < this.goal_biasing ) {
+        
+        if ( this.distance(left, right) < this.goal_resolution ) {
             return extractPath(T, new_node);
         }
 

@@ -1,16 +1,11 @@
 class tree  {
 
-    constructor () {
-        this.root;
+    constructor (root) {
+        this.root = root;
         this.nodes = [];
     }
 
-    insert ( node ) {
-
-        if ( root == null ) {
-            this.root = node;
-        }
-        
+    insert ( node ) {        
         nodes.push(node);
     }
 
