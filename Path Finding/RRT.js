@@ -1,5 +1,5 @@
-import {tree, node} from "/Tree_Struct/treeAll.js";
-
+import {tree, node} from '../Path Finding/Tree_Struct/treeAll.js';
+//import node from '../Path Finding/Tree_Struct/treeAll.js';
 class RRT {
 
     constructor (start, goal, step_size, collision_resolution, goal_resolution, goal_biasing, environment_boundaries) {
@@ -35,19 +35,27 @@ class RRT {
     // p -> passed randomly generated point on canvas
     // T -> tree the nodes are in
     findNearest(p, T) {
-        min_dist = 0;
-        let n = T.nodes[0];
+        //this was originally just 
+        //min_dist = 0;
 
+        let min_dist = 0;
+        //n is undefined here vvv
+        let n = T.nodes[0];
+        //so T.nodes.length is 0
         for ( let i = 0; i < T.nodes.length; i++ ) {
             let d = distance(p, T.nodes[i]);
-
+            
             if ( min_dist > d || min_dist == 0 ) {
                 min_dist = d;
+                
                 n.push(T.nodes[i]);
+                
             }
         }
-
+        //n is returning undefined
+       
         return n;
+        
     }
 
     // takes "step" towards randomly selected position
@@ -56,6 +64,7 @@ class RRT {
     // T -> tree the nodes are in
     // step -> step_size given by constructor
     step(p, T, step) {
+        //n is undifined
         let n = this.findNearest(p, T);
         let d = this.distance(p, n);
         let direction = [(p[0] - n.getX())/d + step, (p[1] - n.getY())/d] + step;
@@ -79,7 +88,7 @@ class RRT {
         }
     }
 
-    // firs step in algorithm process
+    // first step in algorithm process
     // selects random point, creates and returns node for collision evalution
 
     randomCheck () {
@@ -127,3 +136,4 @@ class RRT {
 
 
 }
+export default RRT;
