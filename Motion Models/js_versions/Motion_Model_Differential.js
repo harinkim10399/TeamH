@@ -66,5 +66,4 @@ class diff {
 
 
 }
-const p = new diff(2, 3, 3, 4, 4, 5, 5, 90);
-p.main(2, 3, 3, 4, 4, 5, 5, 90)
+export default diff;
