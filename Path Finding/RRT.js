@@ -1,15 +1,19 @@
-import {tree, node} from "/Tree_Struct/treeAll.js";
-
+import {tree, node} from '../Path Finding/Tree_Struct/treeAll.js';
+//import node from '../Path Finding/Tree_Struct/treeAll.js';
 class RRT {
 
     constructor (start, goal, step_size, collision_resolution, goal_resolution, goal_biasing, obstacles, environment_boundaries) {
         this.start = start;
         this.goal = goal;
         this.step_size = step_size;
+        //what do these 2 do
         this.collision_resolution = collision_resolution;
         this.goal_resolution = goal_resolution;
+
         this.goal_biasing = goal_biasing;
+        //what does this do
         this.obstacles = obstacles;
+
         this.environment_boundaries = environment_boundaries;
         this.T = new tree();
         this.root = new node(start[0], start[1], null);
@@ -21,22 +25,31 @@ class RRT {
     }
     
     findNearest(p, T) {
-        min_dist = 0;
-        let n = T.nodes[0];
+        //this was originally just 
+        //min_dist = 0;
 
+        let min_dist = 0;
+        //n is undefined here vvv
+        let n = T.nodes[0];
+        //so T.nodes.length is 0
         for ( let i = 0; i < T.nodes.length; i++ ) {
             let d = distance(p, T.nodes[i]);
-
+            
             if ( min_dist > d || min_dist == 0 ) {
                 min_dist = d;
+                
                 n.push(T.nodes[i]);
+                
             }
         }
-
+        //n is returning undefined
+       
         return n;
+        
     }
 
     step(p, T, step) {
+        //n is undifined
         let n = this.findNearest(p, T);
         let d = this.distance(p, T);
         let direction = [(p[0] - n.x)/d + step, (p[1] - n.y)/d] + step;
@@ -60,7 +73,9 @@ class RRT {
         }
     }
 
-    //first: returns node
+    // first step in algorithm process
+    // selects random point, creates and returns node for collision evalution
+
     randomCheck () {
 
         let sample;
@@ -70,22 +85,25 @@ class RRT {
         } else {
             sample = this.sampleRandom();
         }
-
-        let new_node = step(sample, this.T, this.step_size);
+        //had to make this vvvv this.step to run
+        let new_node = this.step(sample, this.T, this.step_size);
 
         return new_node;
 
     }
 
+    // second steps if there is collision
+    // severes node and is collected by garbage collection
+    // returns basic string
 
-    // depending on collision or not: second
     collide (n) {
         n.prev = null;
         return "again";
     }
 
-    // if not collision: second
-    // returns array if  --end
+    // second step if there is no collision
+    // pass node from randomCheck
+    // will return string if not finished and array of nodes [end -> start] if finished
     move(n) {
         
         this.T.insert(n);
@@ -104,3 +122,4 @@ class RRT {
 
 
 }
+export default RRT;

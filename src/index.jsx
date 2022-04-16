@@ -1,6 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import cycles from '../Motion Models/js_versions/Motion_Model_Bicycle'
+import cycles from '../Motion Models/js_versions/Motion_Model_Bicycle';
+import RRT from '../Path Finding/RRT';
 
 class App extends React.Component {
   /*TO SUMMARIZE, THE APP CLASS MANAGES ALL STATE CHANGES AND ACTS ALMOST LIKE A PARENT CLASS. THE TERM 'CLASS' AND 'COMPONENT' ARE USED
@@ -21,7 +22,7 @@ class App extends React.Component {
       frontWheelRadius: 0,
       distFrontToBack: 0,
     };
-  
+
     this.toggleButton = this.toggleButton.bind(this);
     this.toggleButton2 = this.toggleButton2.bind(this);
     this.handleDegreeChange = this.handleDegreeChange.bind(this);
@@ -38,7 +39,7 @@ class App extends React.Component {
 
 
   }
-  
+
   toggleButton2 = () => {
     this.setState({
       degree: 0,
@@ -216,7 +217,7 @@ class Canvas extends React.Component {
     super(props);
 
   }
- 
+
   //THIS IS WHERE YOU PUT YOUR JAVASCRIPT/JQUERY CODE FOR MOTION MODELS/PATHFINDING ALGORITHMS!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
   jQueryCodeRET = () => {
 
@@ -264,6 +265,11 @@ class Canvas extends React.Component {
     var goalCoord;
     var setStart = false;
     var startCoord;
+
+    //set values for playing
+    var play = false;
+    //let tree = null;
+
 
     //Does: Creates new array for new object points per object
 
@@ -433,79 +439,157 @@ class Canvas extends React.Component {
       context.stroke();
     }
 
-    //Does: Draw Goal and Start
-    function drawGoalAndStart() {
-      context.beginPath();
-      context.arc(startCoord.x, startCoord.y, 30, 0, 2 * Math.PI);
-      context.fillStyle = 'blue';
-      context.fill()
 
-      context.beginPath();
-      context.arc(goalCoord.x, goalCoord.y, 30, 0, 2 * Math.PI);
-      context.fillStyle = 'yellow';
-      context.fill()
-    }
     //Does: Plays algo
     $('#play').click(function () {
-      if (startCoord != undefined) {
-        branch(startCoord.x, startCoord.y);
+
+      startCoord = [400, 300];
+      goalCoord = [133, 133];
+
+      const bree = new RRT(startCoord, goalCoord, 5, null, null, .1, null, [cw, ch]);
+      console.log(bree.randomCheck());
+      //oneStep();
+      if (startCoord != undefined && goalCoord != undefined) {
+
       }
     });
     //Does:  
     $('#reset').click(function () {
       if (startCoord != undefined) {
-        branch(startCoord.x, startCoord.y);
+        //branch(startCoord.x, startCoord.y);
       }
     });
 
-    //Does: Detects pixel and returns true if it is blank 
-    function detectPixel(x, y) {
-      var pixel = context.getImageData(x, y, 1, 1).data;
-      if (pixel[2] == 255 || pixel[3] == 255) {
+    //Does: Detects red pixel and returns true if it is not red 
+    function isOpenPixel(x, y) {
+      var p = context.getImageData(x, y, 1, 1).data;
+
+      //alert(p[0] + " " + p[1] + " " + p[2]);
+      if (p[0] == 255 && p[1] == 0 && p[2] == 0) {
+        return false;
+      } else {
         return true;
       }
+
+
     }
-    //Does: test branch algo No actual just some BS
-    function branch(x, y) {
-      if (x > 7000) {
-        return;
+
+
+
+    //returns false if their is an obstacle between 
+    function detectLineOfPixels(sx, sy, ex, ey) {
+
+      //alert();
+      //calculate slope maybe shouldnt madder but make spos smaller
+      //var spos = [400, 300];
+      // var epos = [133, 133];
+
+      var spos = [sx, sy];
+      var epos = [ex, ey];
+
+      //spos must always be smaller
+      var a1 = 0 - spos[0];
+      var b1 = 0 - spos[1];
+      var c1 = Math.sqrt(a1 * a1 + b1 * b1);
+
+      var a2 = 0 - epos[0];
+      var b2 = 0 - epos[1];
+      var c2 = Math.sqrt(a2 * a2 + b2 * b2);
+
+      //if spos is bigger swap
+      if (c1 > c2) {
+        var temp = epos;
+        epos = spos;
+        spos = temp
       }
 
-      if (x < -400) {
-        return;
-      }
-
-
-      //dot
+      context.strokeStyle = "blue";
       context.beginPath();
-      context.arc(x, y, 5, 0, 2 * Math.PI);
-      context.fillStyle = 'green';
-      context.fill()
-      //split 
+      context.arc(epos[0], epos[1], 5, 0, 2 * Math.PI);
+      context.stroke()
 
-      //branch 
-      setTimeout(() => {
-        if (!detectPixel(x + 20, y - 60)) {
-          context.lineWidth = 2;
-          context.strokeStyle = 'yellow';
-          context.beginPath();
-          context.moveTo(x, y);
-          context.lineTo(x + 20, y - 60);
-          context.stroke();
-          branch(x + 20, y - 60);
-        }
+      context.beginPath();
+      context.arc(spos[0], spos[1], 5, 0, 2 * Math.PI);
+      context.stroke();
 
-        if (!detectPixel(x + 30, y + 20)) {
-          context.lineWidth = 2;
-          context.strokeStyle = 'red';
-          context.beginPath();
-          context.moveTo(x, y);
-          context.lineTo(x + 30, y + 20);
-          context.stroke();
-          branch(x + 30, y + 20);
+      var slope = (spos[1] - epos[1]) / (spos[0] - epos[0]);
+      //console.log(slope);
+      //calc b 
+      var yintercept = spos[1] - slope * spos[0];
+
+      //console.log(yintercept);
+
+      //distance formula to determine scalar
+      var scalar = 1;
+      var c = 9999;
+      //scaler should get distance every 8 distance 
+      while (c > 8) {
+        //distance from firstposition to new scaled one
+        var newx = epos[0] * scalar + spos[0];
+
+        var newy = (slope * newx) + yintercept;
+        // console.log(newx, newy);
+        // context.strokeStyle = 'red';
+        // context.beginPath();
+        // context.arc(newx, newy, 3, 0, 2 * Math.PI);
+        // context.stroke();
+
+
+        var a = spos[0] - newx;
+        var b = spos[1] - newy;
+        //console.log(scalar);
+
+
+        //reduce scalar
+        scalar = scalar / 2;
+        //checl if the the distance is actually increasing
+        if (c < Math.sqrt(a * a + b * b)) {
+          alert("wrong way");
+          break;
         }
-      }, 1000);
+        c = Math.sqrt(a * a + b * b);
+        //console.log(c + " " + scalar)
+      }
+
+
+      //alert("done");
+      //figure out what points to search 
+
+      var secondScaler = 0;
+      var tempx = spos[0];
+      while (tempx < epos[0]) {
+        tempx = epos[0] * scalar + secondScaler + spos[0];
+        var tempy = (slope * tempx) + yintercept;
+
+        //if not open pixel return false meaning collision
+        if (!isOpenPixel(tempx, tempy)) {
+
+          return false;
+        }
+        // context.strokeStyle = 'green';
+        // context.beginPath();
+        // context.arc(tempx, tempy, 2, 0, 2 * Math.PI);
+        // context.stroke();
+
+
+        secondScaler += 5;
+
+
+      }
+
+      return true;
     }
+
+    function oneStep() {
+      //tre = new RRT(startCoord, goalCoord, step_size, collision_resolution, goal_resolution, goal_biasing, obstacles, environment_boundaries);
+      //play = true;
+      // if (tree == null) {
+
+      // }
+
+
+    }
+
   }
 
 
@@ -608,7 +692,7 @@ class Canvas extends React.Component {
     ctx.transform(1, 0, 0, -1, 0, canvas.height);
 
     function concept() {
-      
+
       //Does: Sets Focul point to center of canvas
 
 
@@ -631,13 +715,13 @@ class Canvas extends React.Component {
 
         // draw a rotated rect
         var Cpos = bike.main();
-    
+
         startX = Cpos[0];
         startY = Cpos[1];
         var theta = Cpos[2] - Math.PI / 2;
         drawWheel(startX, startY, fRadius * 2, DistFrontToBack / 4, degre, theta, DistFrontToBack);
         drawBody(startX, startY, DistFrontToBack, DistFrontToBack / 4, theta);
-      
+
       }
       //check rotation
       //bodyCenter(startX, startY);
@@ -675,7 +759,7 @@ class Canvas extends React.Component {
         ctx.translate(x, y);
         // rotate the rect
         //ctx.rotate(theta);
-      
+
         ctx.rotate(theta);
 
         // draw the rect on the transformed context

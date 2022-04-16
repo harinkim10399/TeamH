@@ -32,8 +32,8 @@ class cycles {
         if ( alpha == 0 ) {
             return this.straightMotion(v, x, y, theta, t);
         } else if ( Math.abs(alpha) >= 3.14 ) {
-            //No need to go past pi for turning. 
-            //This also avoids the limit theorem problem with the Math.tan() function in the variable R
+            // no need to go past pi for turning, also avoids limit theorem problem with the Math.tan() function
+            // in the variable R
             return this.straightMotion(-v, x, y, theta, t);
         }
         
@@ -51,8 +51,8 @@ class cycles {
         [this.x, this.y, this.theta] = result;
         
         return result;
+    
     }
 
 }
-
 export default cycles;

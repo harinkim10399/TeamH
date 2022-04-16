@@ -38,3 +38,6 @@ class node {
 
 
 }
+
+export {tree, node} 
+
