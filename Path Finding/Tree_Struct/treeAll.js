@@ -39,5 +39,5 @@ class node {
 
 }
 
-export default {tree, node,};
+export {tree, node} 
 

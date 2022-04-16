@@ -267,7 +267,7 @@ class Canvas extends React.Component {
 
     //set values for playing
     var play = false;
-    let tree = null;
+    //let tree = null;
 
 
     //Does: Creates new array for new object points per object
@@ -441,11 +441,15 @@ class Canvas extends React.Component {
 
     //Does: Plays algo
     $('#play').click(function () {
-      detectLineOfPixels()
+
+      startCoord = [400, 300];
+      goalCoord = [133, 133];
+
+      const bree = new RRT(startCoord, goalCoord, 5, null, null, .1, null, [cw, ch]);
+      console.log(bree.randomCheck());
+      //oneStep();
       if (startCoord != undefined && goalCoord != undefined) {
 
-        //tree = new RRT(startCoord, goalCoord, step_size, collision_resolution, goal_resolution, goal_biasing, obstacles, environment_boundaries);
-        //tree = new RRT(startCoord, goalCoord, 5, collision_resolution, goal_resolution, goal_biasing, obstacles, environment_boundaries);
       }
     });
     //Does:  
@@ -471,13 +475,16 @@ class Canvas extends React.Component {
 
 
 
-
-    function detectLineOfPixels() {
+    //returns false if their is an obstacle between 
+    function detectLineOfPixels(sx, sy, ex, ey) {
 
       //alert();
       //calculate slope maybe shouldnt madder but make spos smaller
-      var spos = [400, 300];
-      var epos = [133, 133];
+      //var spos = [400, 300];
+      // var epos = [133, 133];
+
+      var spos = [sx, sy];
+      var epos = [ex, ey];
 
       //spos must always be smaller
       var a1 = 0 - spos[0];
@@ -546,7 +553,7 @@ class Canvas extends React.Component {
 
       //alert("done");
       //figure out what points to search 
-      var searchCoords = [];
+
       var secondScaler = 0;
       var tempx = spos[0];
       while (tempx < epos[0]) {
@@ -572,7 +579,15 @@ class Canvas extends React.Component {
       return true;
     }
 
+    function oneStep() {
+      //tre = new RRT(startCoord, goalCoord, step_size, collision_resolution, goal_resolution, goal_biasing, obstacles, environment_boundaries);
+      //play = true;
+      // if (tree == null) {
 
+      // }
+
+
+    }
 
   }
 
