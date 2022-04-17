@@ -119,7 +119,7 @@ class RRT {
     // selects random point, creates and returns node for collision evalution
 
     randomCheck () {
-
+        //alert();
         let sample;
         
         if ( Math.random() < this.goal_biasing ) {
@@ -133,7 +133,9 @@ class RRT {
     
         let new_node = this.step(sample, this.T, this.step_size);
 
+        
         return new_node;
+        
 
     }
 
@@ -153,7 +155,10 @@ class RRT {
         
         this.T.insert(n);
         let left = [n.getX(), n.getY()];
-        if ( this.distance(left, this.goal) < this.goal_resolution ) {
+        //changed
+        //if ( this.distance(left, this.goal) < this.goal_resolution ) {
+        if ( this.distance1(left, this.goal) < this.goal_resolution ) {
+            
             return extractPath(T, new_node);
             
         }

@@ -267,22 +267,8 @@ class Canvas extends React.Component {
 
     //Does: deletes all obstacles
     $('#clear').click(function () {
-      //context.clearRect(0, 0, cw, ch);
-      var node = tree.randomCheck();
+      context.clearRect(0, 0, cw, ch);
 
-      var blocked = detectLineOfPixels(node.prev.x, node.prev.y, node.x, node.y);
-      // console.log(node.prev.x, node.prev.y, node.x, node.y);
-      drawNodesAndLine(node.prev.x, node.prev.y, node.x, node.y, blocked);
-      if (blocked == false) {
-        alert("blocked");
-        tree.collide(node);
-
-      } else {
-        //alert("moving");
-        //console.log("moving")
-        tree.move(node);
-
-      }
     });
 
     //Does: Delete all of canvas and objects
@@ -428,7 +414,7 @@ class Canvas extends React.Component {
       context.stroke();
     }
     //Does: Plays algo
-    $('#play').click(function () {
+    $('#playRET').click(function () {
 
       startCoord = [133, 133];
       goalCoord = [400, 300];
@@ -463,7 +449,28 @@ class Canvas extends React.Component {
         //branch(startCoord.x, startCoord.y);
       }
     });
+    $('#step').click(function () {
 
+      var node = tree.randomCheck();
+
+      var blocked = detectLineOfPixels(node.prev.x, node.prev.y, node.x, node.y);
+      // console.log(node.prev.x, node.prev.y, node.x, node.y);
+      drawNodesAndLine(node.prev.x, node.prev.y, node.x, node.y, blocked);
+      if (blocked == false) {
+        alert("blocked");
+        tree.collide(node);
+
+      } else {
+        //alert("moving");
+        //console.log("moving")
+        tree.move(node);
+
+      }
+
+      if (startCoord != undefined) {
+        //branch(startCoord.x, startCoord.y);
+      }
+    });
     //Does: Detects red pixel and returns true if it is not red 
     function isOpenPixel(x, y) {
       var p = context.getImageData(x, y, 1, 1).data;
