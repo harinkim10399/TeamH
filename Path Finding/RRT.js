@@ -3,22 +3,31 @@ import {tree, node} from '../Path Finding/Tree_Struct/treeAll.js';
 class RRT {
 
     constructor (start, goal, step_size, collision_resolution, goal_resolution, goal_biasing, environment_boundaries) {
+
         // start -> starting coordinates of player in size 2 array (all coordinates use the formating)
+        
         this.start = start;
+
         // goal -> premade node on front end (this will change later to just using cartesian coordinats)
         this.goal = goal;
+
         // step_size -> size of step taken with each iteration of movement (straight number / integer)
         this.step_size = step_size;
+
         // collision_resultion -> may be removed later, for now just place 0
         this.collision_resolution = collision_resolution;
+
         // goal_resolution -> distance from the goal required to say the boal has been reached (number between 0-1 for now)
         // more changes later
         this.goal_resolution = goal_resolution;
+
         // goal_biasing -> number between 0-1 (double) that makes path add node towards the goal
         this.goal_biasing = goal_biasing;
+
         // environment_boundaries -> bounderies of the environment the algorithm uses to select
         // random point to return to the front end
         this.environment_boundaries = environment_boundaries;
+
         // Basic creation and initialization of new tree
         this.T = new tree(new node(start[0], start[1], null));
     }
@@ -40,16 +49,23 @@ class RRT {
         //min_dist = 0;
 
         let min_dist = 0;
-        //n is undefined here vvv
+      
+
+        
         let n = T.nodes[0];
-        //so T.nodes.length is 0
+       
+        
         for ( let i = 0; i < T.nodes.length; i++ ) {
-            let d = distance(p, T.nodes[i]);
+            //changed 
+            //let d = distance(p, T.nodes[i]);
+            let d = this.distance(p, T.nodes[i]);
             
             if ( min_dist > d || min_dist == 0 ) {
                 min_dist = d;
                 
-                n.push(T.nodes[i]);
+                //changed 
+                //n.push(T.nodes[i]);
+                n = (T.nodes[i]);
                 
             }
         }
@@ -65,17 +81,27 @@ class RRT {
     // T -> tree the nodes are in
     // step -> step_size given by constructor
     step(p, T, step) {
-        //n is undifined
-        let n = this.findNearest(p, T);
-        let d = this.distance(p, n);
-        let direction = [(p[0] - n.getX())/d + step, (p[1] - n.getY())/d] + step;
 
+        //n is undifined vvvv
+        let n = this.findNearest(p, T);
+     
+        
+        let d = this.distance(p, n);
+        
+        //changed because its a string
+       // let direction = [(p[0] - n.getX())/d + step, (p[1] - n.getY())/d] + step;
+       let direction = [(p[0] - n.getX())/d + step, (p[1] - n.getY())/d + step] ;
+        
+      
         let new_n = new node(n.getX() + direction[0], n.getY() + direction[1], n);
+        
         return new_n;
 
     }
-
+    
+   
     sampleRandom() {
+
         return [Math.random() * this.environment_boundaries[0], Math.random() * this.environment_boundaries[1]];
     }
 
@@ -97,11 +123,14 @@ class RRT {
         let sample;
         
         if ( Math.random() < this.goal_biasing ) {
-            sample = [this.goal.getX(), this.goal.getY()];
+            //changed from
+            //sample = [this.goal.getX(), this.goal.getY()];
+            //to 
+            sample = [this.goal[0], this.goal[1]];
         } else {
             sample = this.sampleRandom();
         }
-
+    
         let new_node = this.step(sample, this.T, this.step_size);
 
         return new_node;
@@ -124,16 +153,18 @@ class RRT {
         
         this.T.insert(n);
         let left = [n.getX(), n.getY()];
-        let right = [this.goal.getX(), this.goal.getY()];
-        
-        if ( this.distance(left, right) < this.goal_resolution ) {
+        if ( this.distance(left, this.goal) < this.goal_resolution ) {
             return extractPath(T, new_node);
+            
         }
 
         return "again";
 
     }
 
+    distance1(p, n) {
+        return Math.sqrt( Math.pow(p[0]-n[0], 2) + Math.pow(p[1]-n[1], 2) );
+    }
 
 
 }
