@@ -58,8 +58,7 @@ class diff {
         let result = this.robotStep(this.r_l, this.r_r, this.L, this.u_l, this.u_r, this.x, this.y, this.theta, this.t_step);
         // update x, y, and theta
         [this.x, this.y, this.theta] = result;
-    
-        console.log(result);
+        console.log(result)
         return result;
     }
 
