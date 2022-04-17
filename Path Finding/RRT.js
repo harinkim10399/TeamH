@@ -99,7 +99,7 @@ class RRT {
 
         while ( current_n != null ) {
             path.push(current_n);
-            current_n = current_n.incomingEdge();
+            current_n = current_n.prev;
         }
     }
 
