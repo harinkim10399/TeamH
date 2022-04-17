@@ -234,7 +234,7 @@ class Canvas extends React.Component {
 
     establishCanvas()
     var canvas = document.getElementById("canvas");
-    document.getElementById("canvas").style.backgroundColor = "#258588";
+    document.getElementById("canvas").style.backgroundColor = "rgb(233, 221, 221)";
     var context = canvas.getContext("2d");
     var cw = canvas.width;
     var ch = canvas.height;
