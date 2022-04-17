@@ -95,7 +95,7 @@ class RRT {
 
     extractPath( n ) {
         let current_n = n;
-        let path = [ new node(goal[0], goal[1], n) ];
+        let path = [ new node(this.goal[0], this.goal[1], n) ];
 
         while ( current_n != null ) {
             path.push(current_n);
