@@ -262,10 +262,26 @@ class Canvas extends React.Component {
 
     //set values for playing
     var play = false;
+    let tree = null;
 
     //Does: deletes all obstacles
     $('#clear').click(function () {
-      context.clearRect(0, 0, cw, ch);
+      //context.clearRect(0, 0, cw, ch);
+      var node = tree.randomCheck();
+
+      var blocked = detectLineOfPixels(node.prev.x, node.prev.y, node.x, node.y);
+      // console.log(node.prev.x, node.prev.y, node.x, node.y);
+      drawNodesAndLine(node.prev.x, node.prev.y, node.x, node.y, blocked);
+      if (blocked == false) {
+        alert("blocked");
+        tree.collide(node);
+
+      } else {
+        //alert("moving");
+        //console.log("moving")
+        tree.move(node);
+
+      }
     });
 
     //Does: Delete all of canvas and objects
@@ -413,21 +429,35 @@ class Canvas extends React.Component {
     //Does: Plays algo
     $('#play').click(function () {
 
-      startCoord = [400, 300];
-      goalCoord = [133, 133];
+      startCoord = [133, 133];
+      goalCoord = [400, 300];
 
+      context.beginPath();
+      context.arc(400, 300, 3, 0, 2 * Math.PI);
+      context.stroke();
 
-      const bree = new RRT(startCoord, goalCoord, 5, 0, .1, .1, [cw, ch]);
+      context.beginPath();
+      context.arc(133, 133, 3, 0, 2 * Math.PI);
+      context.stroke();
+      var go = 'again';
+
+      tree = new RRT(startCoord, goalCoord, 5, 0, .9, .9, [cw, ch]);
       //constructor (start, goal, step_size, collision_resolution, goal_resolution, goal_biasing, environment_boundaries)
+      while (typeof (go) == 'string') {
+        go = 1;
 
-      console.log(bree.randomCheck());
+      }
       if (startCoord != undefined && goalCoord != undefined) {
+
       }
 
 
     });
     //Does:  
     $('#reset').click(function () {
+
+
+
       if (startCoord != undefined) {
         //branch(startCoord.x, startCoord.y);
       }
@@ -462,13 +492,13 @@ class Canvas extends React.Component {
         spos = temp
       }
 
-      context.strokeStyle = "blue";
-      context.beginPath();
-      context.arc(epos[0], epos[1], 5, 0, 2 * Math.PI);
-      context.stroke()
-      context.beginPath();
-      context.arc(spos[0], spos[1], 5, 0, 2 * Math.PI);
-      context.stroke();
+      // context.strokeStyle = "blue";
+      // context.beginPath();
+      // context.arc(epos[0], epos[1], 5, 0, 2 * Math.PI);
+      // context.stroke()
+      // context.beginPath();
+      // context.arc(spos[0], spos[1], 5, 0, 2 * Math.PI);
+      // context.stroke();
       var slope = (spos[1] - epos[1]) / (spos[0] - epos[0]);
       //console.log(slope);
       //calc b 
@@ -524,6 +554,19 @@ class Canvas extends React.Component {
       //play = true;
       // if (tree == null) {
       // }
+    }
+
+    function drawNodesAndLine(x, y, x1, y1, isBlocked) {
+      x = parseInt(x);
+      y = parseInt(y);
+      x1 = parseInt(x1);
+      y1 = parseInt(y1);
+      context.strokeStyle = "#" + Math.floor(Math.random() * 16777215).toString(16)
+      context.beginPath();
+      context.moveTo(x, y);
+      context.lineTo(x1, y1);
+      context.stroke();
+
     }
   }
 

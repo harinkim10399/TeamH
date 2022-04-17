@@ -7,8 +7,10 @@ class tree  {
         this.nodes.push(root);
     }
 
-    insert ( node ) {        
-        nodes.push(node);
+    insert ( node ) {    
+        //changed    
+        //nodes.push(node);
+        this.nodes.push(node);
     }
 
 }

@@ -5,6 +5,7 @@ class RRT {
     constructor (start, goal, step_size, collision_resolution, goal_resolution, goal_biasing, environment_boundaries) {
 
         // start -> starting coordinates of player in size 2 array (all coordinates use the formating)
+        
         this.start = start;
 
         // goal -> premade node on front end (this will change later to just using cartesian coordinats)
@@ -48,14 +49,14 @@ class RRT {
         //min_dist = 0;
 
         let min_dist = 0;
-        console.log(T.nodes[0] + " t");
+      
 
         
         let n = T.nodes[0];
        
         
         for ( let i = 0; i < T.nodes.length; i++ ) {
-            //changed let d = distance(p, T.nodes[i]);
+            //changed 
             //let d = distance(p, T.nodes[i]);
             let d = this.distance(p, T.nodes[i]);
             
@@ -83,16 +84,22 @@ class RRT {
 
         //n is undifined vvvv
         let n = this.findNearest(p, T);
-       // console.log(n +  " n");
+     
         
         let d = this.distance(p, n);
-        let direction = [(p[0] - n.getX())/d + step, (p[1] - n.getY())/d] + step;
-
+        
+        //changed because its a string
+       // let direction = [(p[0] - n.getX())/d + step, (p[1] - n.getY())/d] + step;
+       let direction = [(p[0] - n.getX())/d + step, (p[1] - n.getY())/d + step] ;
+        
+      
         let new_n = new node(n.getX() + direction[0], n.getY() + direction[1], n);
+        
         return new_n;
 
     }
-
+    
+   
     sampleRandom() {
 
         return [Math.random() * this.environment_boundaries[0], Math.random() * this.environment_boundaries[1]];
@@ -123,7 +130,7 @@ class RRT {
         } else {
             sample = this.sampleRandom();
         }
-        console.log(this.T);
+    
         let new_node = this.step(sample, this.T, this.step_size);
 
         return new_node;
@@ -145,17 +152,26 @@ class RRT {
     move(n) {
         
         this.T.insert(n);
-        let left = [n.getX(), n.getY()];
-        let right = [this.goal.getX(), this.goal.getY()];
-        
-        if ( this.distance(left, right) < this.goal_resolution ) {
+        //changed
+        //let left = [n.getX(), n.getY()];
+        let left = [n.x, n.y]
+        //changed
+        //let right = [this.goal.getX(), this.goal.getY()];
+        let right = [this.goal[0], this.goal[1]];
+        console.log(this.distance1(left, right));
+        if ( this.distance1(left, right) < this.goal_resolution ) {
+            alert("done");
             return extractPath(T, new_node);
+            
         }
 
         return "again";
 
     }
 
+    distance1(p, n) {
+        return Math.sqrt( Math.pow(p[0]-n[0], 2) + Math.pow(p[1]-n[1], 2) );
+    }
 
 
 }
