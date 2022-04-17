@@ -223,8 +223,13 @@ class Canvas extends React.Component {
     //Does: Creates canvas based off screen size
     function establishCanvas() {
       var div = document.getElementById("canvasSpace");
-      $("canvas").remove();
-      div.innerHTML += '<canvas id="canvas"' + 'width="640"' + 'height="260"></canvas>';
+      var canvas = document.createElement('canvas');
+      var sizeWidth = 80 * window.innerWidth / 100,
+        sizeHeight = 60 * window.innerHeight / 100 || 766;
+      canvas.width = sizeWidth;
+      canvas.height = sizeHeight;
+      document.getElementById("canvas").remove();
+      div.innerHTML += '<canvas id="canvas" width= ' + sizeWidth + ' height=' + sizeHeight + '></canvas>';
     }
 
     establishCanvas()
