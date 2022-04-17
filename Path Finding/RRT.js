@@ -49,24 +49,16 @@ class RRT {
         //min_dist = 0;
 
         let min_dist = 0;
-      
-
-        
         let n = T.nodes[0];
+        let nodes = T.getNodeArray();
        
         
-        for ( let i = 0; i < T.nodes.length; i++ ) {
-            //changed 
-            //let d = distance(p, T.nodes[i]);
-            let d = this.distance(p, T.nodes[i]);
+        for ( let i = 0; i < nodes.length; i++ ) {
+            let d = this.distance(p, T.getNodeIndex(i));
             
             if ( min_dist > d || min_dist == 0 ) {
                 min_dist = d;
-                
-                //changed 
-                //n.push(T.nodes[i]);
-                n = (T.nodes[i]);
-                
+                n = T.getNodeIndex(i);
             }
         }
         //n is returning undefined
@@ -84,16 +76,12 @@ class RRT {
 
         //n is undifined vvvv
         let n = this.findNearest(p, T);
-     
-        
         let d = this.distance(p, n);
         
         //changed because its a string
-       // let direction = [(p[0] - n.getX())/d + step, (p[1] - n.getY())/d] + step;
-       let direction = [(p[0] - n.getX())/d + step, (p[1] - n.getY())/d + step] ;
-        
-      
-        let new_n = new node(n.getX() + direction[0], n.getY() + direction[1], n);
+        // let direction = [(p[0] - n.getX())/d + step, (p[1] - n.getY())/d] + step;
+        let direction = [(p[0] - n.getX())/d, (p[1] - n.getY())/d] ;      
+        let new_n = new node(n.getX() + (direction[0] * step), n.getY() + (direction[1] * step), n);
         
         return new_n;
 
@@ -105,35 +93,39 @@ class RRT {
         return [Math.random() * this.environment_boundaries[0], Math.random() * this.environment_boundaries[1]];
     }
 
-    extractPath( node ) {
-        let current_n = node;
-        let path = [goal];
+    extractPath( n ) {
+        let current_n = n;
+        let path = [ new node(this.goal[0], this.goal[1], n) ];
 
         while ( current_n != null ) {
             path.push(current_n);
-            current_n = current_n.incomingEdge();
+            current_n = current_n.prev;
         }
+
+        return path;
     }
 
     // first step in algorithm process
     // selects random point, creates and returns node for collision evalution
 
     randomCheck () {
-
+        //alert();
         let sample;
         
         if ( Math.random() < this.goal_biasing ) {
             //changed from
             //sample = [this.goal.getX(), this.goal.getY()];
             //to 
-            sample = [this.goal[0], this.goal[1]];
+            sample = this.goal;
         } else {
             sample = this.sampleRandom();
         }
     
         let new_node = this.step(sample, this.T, this.step_size);
 
+        
         return new_node;
+        
 
     }
 
@@ -149,12 +141,15 @@ class RRT {
     // second step if there is no collision
     // pass node from randomCheck
     // will return string if not finished and array of nodes [end -> start] if finished
-    move(n) {
+    move (n) {
         
         this.T.insert(n);
         let left = [n.getX(), n.getY()];
-        if ( this.distance(left, this.goal) < this.goal_resolution ) {
-            return extractPath(T, new_node);
+        //changed
+        //if ( this.distance(left, this.goal) < this.goal_resolution ) {
+        if ( this.distance1(left, this.goal) < this.goal_resolution ) {
+            alert("made it")
+            return this.extractPath(this.T, n);
             
         }
 
