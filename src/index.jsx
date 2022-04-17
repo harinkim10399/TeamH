@@ -234,7 +234,7 @@ class Canvas extends React.Component {
 
     establishCanvas()
     var canvas = document.getElementById("canvas");
-    document.getElementById("canvas").style.backgroundColor = "#258588";
+    document.getElementById("canvas").style.backgroundColor = "rgb(233, 221, 221)";
     var context = canvas.getContext("2d");
     var cw = canvas.width;
     var ch = canvas.height;
@@ -416,19 +416,19 @@ class Canvas extends React.Component {
     //Does: Plays algo
     $('#playRET').click(function () {
 
-      startCoord = [133, 133];
-      goalCoord = [400, 300];
+      goalCoord = [133, 133];
+      startCoord = [600, 300];
 
       context.beginPath();
-      context.arc(400, 300, 3, 0, 2 * Math.PI);
+      context.arc(startCoord[0], startCoord[1], 3, 0, 2 * Math.PI);
       context.stroke();
 
       context.beginPath();
-      context.arc(133, 133, 3, 0, 2 * Math.PI);
+      context.arc(goalCoord[0], goalCoord[1], 3, 0, 2 * Math.PI);
       context.stroke();
       var go = 'again';
 
-      tree = new RRT(startCoord, goalCoord, 5, 0, .9, .9, [cw, ch]);
+      tree = new RRT(startCoord, goalCoord, 20, 0, 30, .9, [cw, ch]);
       //constructor (start, goal, step_size, collision_resolution, goal_resolution, goal_biasing, environment_boundaries)
       while (typeof (go) == 'string') {
         go = 1;
@@ -451,24 +451,29 @@ class Canvas extends React.Component {
     });
     $('#step').click(function () {
 
-      var node = tree.randomCheck();
-
-      var blocked = detectLineOfPixels(node.prev.x, node.prev.y, node.x, node.y);
-      // console.log(node.prev.x, node.prev.y, node.x, node.y);
-      drawNodesAndLine(node.prev.x, node.prev.y, node.x, node.y, blocked);
-      if (blocked == false) {
-        alert("blocked");
-        tree.collide(node);
-
-      } else {
-        //alert("moving");
-        //console.log("moving")
-        tree.move(node);
-
-      }
+      //var go = "again";
 
       if (startCoord != undefined) {
-        //branch(startCoord.x, startCoord.y);
+        var node = tree.randomCheck();
+
+        var blocked = detectLineOfPixels(node.prev.x, node.prev.y, node.x, node.y);
+        // console.log(node.prev.x, node.prev.y, node.x, node.y);
+        drawNodesAndLine(node.prev.x, node.prev.y, node.x, node.y, blocked);
+        if (blocked == false) {
+          alert("blocked");
+          tree.collide(node);
+
+        } else {
+          //alert("moving");
+          //console.log("moving")
+          var temp = tree.move(node);
+
+          if (typeof temp != 'string') {
+            alert("help");
+          }
+
+
+        }
       }
     });
     //Does: Detects red pixel and returns true if it is not red 
@@ -532,7 +537,7 @@ class Canvas extends React.Component {
         //check if the the distance is actually increasing
         if (c < Math.sqrt(a * a + b * b)) {
           alert("wrong way");
-          break;
+          //break;
         }
         c = Math.sqrt(a * a + b * b);
         //console.log(c + " " + scalar)
