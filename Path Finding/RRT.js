@@ -141,7 +141,7 @@ class RRT {
     // second step if there is no collision
     // pass node from randomCheck
     // will return string if not finished and array of nodes [end -> start] if finished
-    move(n) {
+    move (n) {
         
         this.T.insert(n);
         let left = [n.getX(), n.getY()];
