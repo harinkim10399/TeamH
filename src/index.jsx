@@ -312,13 +312,13 @@ class Canvas extends React.Component {
       //Edge case that "erases previous drawn circle"
       if (startCoord != null) {
         context.beginPath();
-        context.arc(startCoord.x, startCoord.y, 31, 0, 2 * Math.PI);
+        context.arc(startCoord.x, startCoord.y, 9, 0, 2 * Math.PI);
         context.fillStyle = `rgb(233, 221, 221)`;
         context.fill()
       }
 
       context.beginPath();
-      context.arc(mouseX, mouseY, 30, 0, 2 * Math.PI);
+      context.arc(mouseX, mouseY, 8, 0, 2 * Math.PI);
       context.fillStyle = 'blue';
       context.fill()
       startCoord = { x: mouseX, y: mouseY };
@@ -335,13 +335,13 @@ class Canvas extends React.Component {
       //Edge case that "erases previous drawn circle"
       if (goalCoord != null) {
         context.beginPath();
-        context.arc(goalCoord.x, goalCoord.y, 31, 0, 2 * Math.PI);
+        context.arc(goalCoord.x, goalCoord.y, 9, 0, 2 * Math.PI);
         context.fillStyle = `rgb(233, 221, 221)`;
         context.fill()
       }
       context.beginPath();
-      context.arc(mouseX, mouseY, 30, 0, 2 * Math.PI);
-      context.fillStyle = 'yellow';
+      context.arc(mouseX, mouseY, 8, 0, 2 * Math.PI);
+      context.fillStyle = 'green';
       context.fill()
       goalCoord = { x: mouseX, y: mouseY };
       setGoal = false;
@@ -415,56 +415,18 @@ class Canvas extends React.Component {
     }
     //Does: Plays algo
     $('#playRET').click(function () {
-
-      goalCoord = [133, 133];
-      startCoord = [600, 300];
-      context.strokeStyle = "blue"
-      context.beginPath();
-      context.arc(startCoord[0], startCoord[1], 3, 0, 2 * Math.PI);
-      context.stroke();
-
-      context.strokeStyle = "green"
-      context.beginPath();
-      context.arc(goalCoord[0], goalCoord[1], 3, 0, 2 * Math.PI);
-      context.stroke();
-
-      //detectLineOfPixels(startCoord[0], startCoord[1], goalCoord[0], goalCoord[1]);
       var go = 'again';
+      //alert(typeof go)
+      //var boo = 10000
+      while ((typeof go) == 'string') {
+        //alert("boom")
 
-      tree = new RRT(startCoord, goalCoord, 100, 0, 10, .4, [cw, ch]);
-      //constructor (start, goal, step_size, collision_resolution, goal_resolution, goal_biasing, environment_boundaries)
+        go = oneStep();
 
-      while (typeof (go) == 'string') {
-
-
-        if (startCoord != undefined) {
-          var node = tree.randomCheck();
-
-          var blocked = detectLineOfPixels(node.prev.x, node.prev.y, node.x, node.y);
-          // console.log(node.prev.x, node.prev.y, node.x, node.y);
-
-          if (blocked == false) {
-            //alert("blocked");
-            go = tree.collide(node);
-
-          } else {
-            //alert("moving");
-            //console.log("moving")
-            var temp = tree.move(node);
-            go = temp;
-            drawNodesAndLine(node.prev.x, node.prev.y, node.x, node.y, blocked);
-            if (typeof temp != 'string') {
-              alert("we dit year");
-            }
-
-
-          }
-        }
-
+        // boo--;
       }
-      if (startCoord != undefined && goalCoord != undefined) {
 
-      }
+
 
 
     });
@@ -479,30 +441,10 @@ class Canvas extends React.Component {
     });
     $('#step').click(function () {
 
-      //var go = "again";
-
-      if (startCoord != undefined) {
-        var node = tree.randomCheck();
-
-        var blocked = detectLineOfPixels(node.prev.x, node.prev.y, node.x, node.y);
-        // console.log(node.prev.x, node.prev.y, node.x, node.y);
-
-        if (blocked == false) {
-          //alert("blocked");
-          tree.collide(node);
-
-        } else {
-          //alert("moving");
-          //console.log("moving")
-          var temp = tree.move(node);
-          drawNodesAndLine(node.prev.x, node.prev.y, node.x, node.y, blocked);
-          if (typeof temp != 'string') {
-            console.log(temp);
-          }
+      oneStep();
 
 
-        }
-      }
+
     });
     //Does: Detects red pixel and returns true if it is not red 
     function isOpenPixel(x, y) {
@@ -515,12 +457,18 @@ class Canvas extends React.Component {
       if (p[0] == 255 && p[1] == 0 && p[2] == 0) {
         return false;
       } else {
+        // if (p[0] == 0 && p[1] == 0 && p[2] == 255) {
+        //   return false;
+        // }
         return true;
       }
     }
     //returns false if their is an obstacle between 
     function detectLineOfPixels(sx, sy, ex, ey) {
       //calculate slope maybe shouldnt madder but make spos smaller
+      if (!isOpenPixel(ex, ey)) {
+        return false;
+      }
       var spos = [sx, sy];
       var epos = [ex, ey];
 
@@ -550,28 +498,25 @@ class Canvas extends React.Component {
       //console.log(slope);
       //calc b 
       var yintercept = spos[1] - slope * spos[0];
-      //console.log(yintercept);
+      //console.log("slope " + slope + " intercept " + yintercept);
       //distance formula to determine scalar
       var scalar = 1;
       var c = 9999;
       //scaler should get distance every 8 distance 
-      while (c > 8) {
+      while (c > 15) {
         //distance from firstposition to new scaled one
         var newx = epos[0] * scalar + spos[0];
         var newy = (slope * newx) + yintercept;
-        // console.log(newx, newy);
-        // context.strokeStyle = 'red';
-        // context.beginPath();
-        // context.arc(newx, newy, 3, 0, 2 * Math.PI);
-        // context.stroke();
+
         var a = spos[0] - newx;
         var b = spos[1] - newy;
         //reduce scalar
         scalar = scalar / 2;
         //check if the the distance is actually increasing
+        //console.log("did go");
         if (c < Math.sqrt(a * a + b * b)) {
-          //alert("wrong way");
-          //break;
+          //console.log("wrong way");
+          //return false;
         }
         c = Math.sqrt(a * a + b * b);
         //console.log(c + " " + scalar)
@@ -593,7 +538,7 @@ class Canvas extends React.Component {
           return false;
         }
 
-        secondScaler += 5;
+        secondScaler += 1;
       }
       return true;
     }
@@ -601,25 +546,84 @@ class Canvas extends React.Component {
     $('#line').click(function () {
       goalCoord = [133, 133];
       startCoord = [600, 300];
-      // context.strokeStyle = "blue"
-      // context.beginPath();
-      // context.arc(startCoord[0], startCoord[1], 3, 0, 2 * Math.PI);
-      // context.stroke();
+      context.strokeStyle = "blue"
+      context.beginPath();
+      context.arc(startCoord[0], startCoord[1], 3, 0, 2 * Math.PI);
+      context.stroke();
 
-      // context.strokeStyle = "green"
-      // context.beginPath();
-      // context.arc(goalCoord[0], goalCoord[1], 3, 0, 2 * Math.PI);
-      // context.stroke();
+      context.strokeStyle = "green"
+      context.beginPath();
+      context.arc(goalCoord[0], goalCoord[1], 3, 0, 2 * Math.PI);
+      context.stroke();
       detectLineOfPixels(goalCoord[0], goalCoord[1], startCoord[0], startCoord[1]);
 
 
 
     });
+
+
     function oneStep() {
-      //tre = new RRT(startCoord, goalCoord, step_size, collision_resolution, goal_resolution, goal_biasing, obstacles, environment_boundaries);
-      //play = true;
-      // if (tree == null) {
-      // }
+      //alert("went")
+      if (goalCoord == null || startCoord == null) {
+        goalCoord = [300, 200];
+        startCoord = [800, 200];
+
+        context.strokeStyle = "blue"
+        context.beginPath();
+        context.arc(startCoord[0], startCoord[1], 3, 0, 2 * Math.PI);
+        context.stroke();
+
+        context.strokeStyle = "green"
+        context.beginPath();
+        context.arc(goalCoord[0], goalCoord[1], 3, 0, 2 * Math.PI);
+        context.stroke();
+
+
+      } else {
+        var tx = goalCoord.x;
+        var ty = goalCoord.y;
+        goalCoord = null
+        goalCoord = [tx, ty];
+        tx = startCoord.x;
+        ty = startCoord.y;
+        startCoord = [tx, ty];
+      }
+
+
+
+
+
+      var go = 'again';
+      if (tree == null) {
+        tree = new RRT(startCoord, goalCoord, 30, 0, 10, .1, [cw, ch]);
+      }
+
+      //constructor (start, goal, step_size, collision_resolution, goal_resolution, goal_biasing, environment_boundaries)
+
+
+
+
+
+      var node = tree.randomCheck();
+      //detects for colision
+      var blocked = detectLineOfPixels(node.prev.x, node.prev.y, node.x, node.y);
+      //if colided
+      if (blocked == false) {
+        go = tree.collide(node);
+        return go;
+      } else {
+
+        //if no collision
+        go = tree.move(node);
+        drawNodesAndLine(node.prev.x, node.prev.y, node.x, node.y, blocked);
+        //if completed
+
+
+        return go;
+      }
+
+      alert(blocked);
+
     }
 
     function drawNodesAndLine(x, y, x1, y1, isBlocked) {
@@ -627,7 +631,8 @@ class Canvas extends React.Component {
       y = parseInt(y);
       x1 = parseInt(x1);
       y1 = parseInt(y1);
-      context.strokeStyle = "#" + Math.floor(Math.random() * 16777215).toString(16)
+      context.strokeStyle = 'blue';
+      // context.strokeStyle = "#" + Math.floor(Math.random() * 16777215).toString(16)
       context.beginPath();
       context.moveTo(x, y);
       context.lineTo(x1, y1);
