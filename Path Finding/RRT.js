@@ -147,7 +147,7 @@ class RRT {
         //if ( this.distance(left, this.goal) < this.goal_resolution ) {
         if ( this.distance1(left, this.goal) < this.goal_resolution ) {
             alert("made it")
-            return this.extractPath(this.T, new_node);
+            return this.extractPath(this.T, n);
             
         }
 
