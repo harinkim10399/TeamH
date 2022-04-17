@@ -101,6 +101,8 @@ class RRT {
             path.push(current_n);
             current_n = current_n.prev;
         }
+
+        return path;
     }
 
     // first step in algorithm process
