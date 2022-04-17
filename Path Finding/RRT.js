@@ -152,15 +152,8 @@ class RRT {
     move(n) {
         
         this.T.insert(n);
-        //changed
-        //let left = [n.getX(), n.getY()];
-        let left = [n.x, n.y]
-        //changed
-        //let right = [this.goal.getX(), this.goal.getY()];
-        let right = [this.goal[0], this.goal[1]];
-        console.log(this.distance1(left, right));
-        if ( this.distance1(left, right) < this.goal_resolution ) {
-            alert("done");
+        let left = [n.getX(), n.getY()];
+        if ( this.distance(left, this.goal) < this.goal_resolution ) {
             return extractPath(T, new_node);
             
         }
