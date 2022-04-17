@@ -124,9 +124,7 @@ class RRT {
         
         this.T.insert(n);
         let left = [n.getX(), n.getY()];
-        let right = [this.goal.getX(), this.goal.getY()];
-        
-        if ( this.distance(left, right) < this.goal_resolution ) {
+        if ( this.distance(left, this.goal) < this.goal_resolution ) {
             return extractPath(T, new_node);
         }
 
