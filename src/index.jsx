@@ -1,6 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import cycles from '../Motion Models/js_versions/Motion_Model_Bicycle';
+import tricycle from '../Motion Models/js_versions/Motion_Model_Tricycle';
 import RRT from '../Path Finding/RRT';
 
 class App extends React.Component {
@@ -52,15 +53,45 @@ class App extends React.Component {
       rightWheelRadius: 0,
       frontWheelRadius: 0,
       distFrontToBack: 0,
+      distBackTwoWheels: 0,
     }, () => {
       console.log('');
     });
   }
 
   togglePage = (num) => {
-    this.setState({ page: num }, () => {
+    this.setState({ page: num, 
+      steeringAngle: 0,
+      angularVelocity: 0,
+      distBetweenWheels: 0,
+      leftAngularVelocity: 0,
+      rightAngularVelocity: 0,
+      leftWheelRadius: 0,
+      rightWheelRadius: 0,
+      frontWheelRadius: 0,
+      distFrontToBack: 0,
+      distBackTwoWheels: 0,
+     }, () => {
       console.log('');
     });
+     switch (this.state.page) {
+      case 'Bicycle':
+        document.getElementById('frontWheelRadius').value = '';
+        document.getElementById('distFrontToBack').value = '';
+        document.getElementById('steeringAngle').value = '';
+        document.getElementById('angularVelocity').value = '';
+        break;
+      case 'Tricycle':
+        document.getElementById('frontWheelRadius').value = '';
+        document.getElementById('distFrontToBack').value = '';
+        document.getElementById('steeringAngle').value = '';
+        document.getElementById('angularVelocity').value = '';
+        document.getElementById('distBetweenBackWheels').value = '';
+        break;
+      case "RET":
+        break;
+    }
+  
   };
 
   handleSteeringAngleChange = (num) => {
@@ -130,7 +161,7 @@ class App extends React.Component {
         return (<><Navbar togglePage={this.togglePage} /><Canvas jQuery={this.state.page} /><RightDrawingUI /><LowerControlUI jQuery={this.state.page} /></>)
         break;
       case 'Diff. Drive':
-        return (<><Navbar togglePage={this.togglePage} /><Canvas jQuery={this.state.page} /><RightParameterUI onLeftAngularVelocityChange={this.handleLeftAngularVelocityChange}
+        return (<><Navbar toggleResetParameters = {this.toggleResetParameters} togglePage={this.togglePage} /><Canvas jQuery={this.state.page} /><RightParameterUI onLeftAngularVelocityChange={this.handleLeftAngularVelocityChange}
           onRightAngularVelocityChange={this.handleRightAngularVelocityChange}
           onLeftWheelRadiusChange={this.handleLeftWheelRadiusChange}
           onRightWheelRadiusChange={this.handleRightWheelRadiusChange}
@@ -151,7 +182,12 @@ class App extends React.Component {
             jQuery={this.state.page} /><LowerControlUI jQuery={this.state.page} toggleResetParameters={this.toggleResetParameters} /></>)
         break;
       case 'Tricycle':
-        return (<><Navbar togglePage={this.togglePage} /><Canvas jQuery={this.state.page} />
+        return (<><Navbar togglePage={this.togglePage} /><Canvas 
+            steeringAngle={this.state.steeringAngle}
+          angularVelocity={this.state.angularVelocity}
+          distFrontToBack={this.state.distFrontToBack}
+          frontWheelRadius={this.state.frontWheelRadius}
+          distBackTwoWheels = {this.state.distBackTwoWheels} jQuery={this.state.page} />
           <RightParameterUI onAngularVelocityChange={this.handleAngularVelocityChange}
             onSteeringAngleChange={this.handleSteeringAngleChange}
             onDistBackTwoWheelsChange={this.handleDistBackTwoWheelsChange}
@@ -234,7 +270,7 @@ class Canvas extends React.Component {
 
     establishCanvas()
     var canvas = document.getElementById("canvas");
-    document.getElementById("canvas").style.backgroundColor = "#258588";
+    document.getElementById("canvas").style.backgroundColor = "white";
     var context = canvas.getContext("2d");
     var cw = canvas.width;
     var ch = canvas.height;
@@ -428,7 +464,7 @@ class Canvas extends React.Component {
       context.stroke();
     }
     //Does: Plays algo
-    $('#play').click(function () {
+    $('#playRET').click(function () {
 
       startCoord = [133, 133];
       goalCoord = [400, 300];
@@ -455,7 +491,7 @@ class Canvas extends React.Component {
 
     });
     //Does:  
-    $('#reset').click(function () {
+    $('#resetRRT').click(function () {
 
 
 
@@ -648,10 +684,10 @@ class Canvas extends React.Component {
     var bikeBodyAngle = 0;
     var notUsedForBikeVariable = 0;
 
-    $('#play').click(function () {
+    $('#playMotionModel').click(function () {
       proceed = true;
     })
-    $('#pause').click(function () {
+    $('#pauseMotionModel').click(function () {
       proceed = false;
     })
     const bike = new cycles(frontWheelRadius, distFrontToBack, angularVelocity, radians, startX, startY, bikeBodyAngle, notUsedForBikeVariable);
@@ -739,28 +775,162 @@ class Canvas extends React.Component {
   }
 
   jQueryCodeTricycle = () => {
-    function establishCanvas() {
+     function establishCanvas() {
       var div = document.getElementById("canvasSpace");
       $("canvas").remove();
       div.innerHTML += '<canvas id="canvas"' + 'width="640"' + 'height="260"></canvas>';
       div.innerHTML += '<canvas id="canvas2"' + 'width="640"' + 'height="260"></canvas>';
-    }
 
+    }
     establishCanvas()
     var canvas = document.getElementById("canvas");
-    var context = canvas.getContext("2d");
     var canvas2 = document.getElementById("canvas2");
+    var ctx = canvas.getContext("2d");
     var ctx2 = canvas2.getContext("2d");
-    var cw = canvas.width;
-    var ch = canvas.height;
-    var offsetX, offsetY;
-    function reOffset() {
-      var BB = canvas.getBoundingClientRect();
-      offsetX = BB.left;
-      offsetY = BB.top;
+    var proceed = true;
+    //Do: Establish vehicle frame and and wheel off of a single X and Y coordinate ("concept" function below)
+    //Do: Use current JS code (other folder) to change poistion and redraw below 
+    //first take the remainder out of 360
+    var steeringAngle = (this.props.steeringAngle % 360)
+    var distFrontToBack = this.props.distFrontToBack;
+    var frontWheelRadius = this.props.frontWheelRadius;
+    var angularVelocity = this.props.angularVelocity;
+    var distBackTwoWheels = (this.props.distBackTwoWheels / 2);
+    var radians = 0;
+    // convert to neg when greater than 180
+    if (steeringAngle > 180) {
+      steeringAngle = steeringAngle - 360;
     }
-    reOffset();
-    window.onscroll = function (e) { reOffset(); }
+    radians = steeringAngle * Math.PI / 180;
+
+    var startX = canvas.width / 2;
+    var startY = canvas.height / 4;
+    var trikeBodyAngle = 0;
+    var notUsedForTrikeVariable = 0;
+
+    $('#playMotionModel').click(function () {
+      proceed = true;
+    })
+    $('#pauseMotionModel').click(function () {
+      proceed = false;
+    })
+    const trike = new tricycle(frontWheelRadius, distFrontToBack, angularVelocity, radians, startX, startY, trikeBodyAngle, notUsedForTrikeVariable);
+    //Does: Flips canvas to correct orientation
+    ctx.transform(1, 0, 0, -1, 0, canvas.height);
+    ctx2.transform(1, 0, 0, -1, 0, canvas.height);
+    function concept() {
+      //Does: Sets Focul point to center of canvas
+
+      //Pause when off screen
+      if (startX > canvas.width) {
+        proceed = false;
+      }
+      if (0 > startX) {
+        proceed = false;
+      }
+      if (startY > canvas.height) {
+        proceed = false;
+      }
+      if (0 > startY) {
+        proceed = false;
+      }
+      //Pause when stop is false
+      if (proceed) {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+        // draw a rotated rect
+        var cPos = trike.main();
+        startX = cPos[0];
+        startY = cPos[1];
+        var theta = cPos[2] - Math.PI / 2;
+  
+       //front wheel
+        drawWheel(startX - 5, startY, frontWheelRadius * 0.3, distFrontToBack / 3.5, steeringAngle, theta, distFrontToBack);
+      //back left wheel
+        drawWheels(startX, startY, frontWheelRadius * 0.3, distFrontToBack / 4, steeringAngle, theta, -distBackTwoWheels /3,distFrontToBack * -1);
+        //back right wheel
+        drawWheels(startX, startY, frontWheelRadius * 0.3, distFrontToBack / 4, steeringAngle, theta, distBackTwoWheels /3 ,distFrontToBack * -1);
+        drawBody(startX, startY, distFrontToBack, distFrontToBack / 4, theta);
+        drawBackRectangle(startX, startY, distFrontToBack /2, distBackTwoWheels, theta)
+        drawTrail(startX, startY);
+      }
+       function drawBackRectangle(x, y, height, width, theta) {
+        var bodyX = -width/3;
+        var bodyY = -height;
+        ctx.save();
+        ctx.beginPath();
+        ctx.translate(x, y);
+        ctx.rotate(theta);
+        ctx.rect(bodyX, bodyY, distBackTwoWheels/1.5, height / 4);
+        ctx.fillStyle = "purple";
+        ctx.fill();
+        ctx.restore();
+      }
+      function drawWheels(x, y, height, width, steeringAngles, theta, offset1,offset) {
+        // first save the untranslated/unrotated context
+        ctx.save();
+        ctx.beginPath();
+        // move the rotation point to the center of the body
+        ctx.translate(x, y);
+        ctx.rotate(theta);
+        //Center is now  0, 0 + offset / 2, now offset for size of box 
+        ctx.translate(offset1, 0 + offset / 2);
+        ctx.rotate(steeringAngles * Math.PI / 180);
+        // Note: after transforming [0,0] is visually [x,y] so the rect needs to be offset accordingly when drawn
+        ctx.rect(-width / 2, -height / 2, width, height);
+        ctx.fillStyle = "red";
+        ctx.fill();
+        // restore the context to its untranslated/unrotated state
+        ctx.restore();
+      }
+      //check rotation
+      //bodyCenter(startX, startY);
+      //wheelCenter(startX, startY, DistFrontToBack);
+      function drawTrail(x, y) {
+
+        ctx2.beginPath()
+        ctx2.rect(x, y, 3, 5)
+        ctx2.fillStyle = "lime"
+        ctx2.fill()
+        ctx2.stroke();
+
+      }
+
+      function drawBody(x, y, height, width, theta) {
+        var bodyX = -width / 2;
+        var bodyY = -height / 2;
+        ctx.save();
+        ctx.beginPath();
+        ctx.translate(x, y);
+        ctx.rotate(theta);
+        ctx.rect(bodyX, bodyY, width, height);
+        ctx.fillStyle = "blue";
+        ctx.fill();
+        ctx.restore();
+      }
+
+      function drawWheel(x, y, height, width, steeringAngles, theta, offset) {
+        // first save the untranslated/unrotated context
+        ctx.save();
+        ctx.beginPath();
+        // move the rotation point to the center of the body
+        ctx.translate(x, y);
+        ctx.rotate(theta);
+        //Center is now  0, 0 + offset / 2, now offset for size of box 
+        ctx.translate(0, 0 + offset / 2);
+        ctx.rotate(steeringAngles * Math.PI / 180);
+        // Note: after transforming [0,0] is visually [x,y] so the rect needs to be offset accordingly when drawn
+        ctx.rect(-width / 2, -height / 2, width, height);
+        ctx.fillStyle = "red";
+        ctx.fill();
+        // restore the context to its untranslated/unrotated state
+        ctx.restore();
+      }
+
+      setTimeout(() => { window.requestAnimationFrame(concept); }, 1000 / 65);
+    }
+
+    window.requestAnimationFrame(concept);
   }
 
   //rendering jQuery code when you first render the Canvas Component
@@ -837,7 +1007,7 @@ class LowerControlUI extends React.Component {
         break;
     }
   }
-
+  
   render() {
     if (this.props.jQuery === 'RET') {
       return (
@@ -846,9 +1016,9 @@ class LowerControlUI extends React.Component {
           <div>
             <button id="playRET"><img width="25" height="25" src="https://media.istockphoto.com/vectors/vector-play-button-icon-vector-id1066846868?k=20&m=1066846868&s=612x612&w=0&h=BikDjIPuOmb08aDFeDiEwDiKosX7EgnvtdQyLUvb3eA="></img></button>
             <button id="pauseRET"><img width="40" height="25" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAARwAAACxCAMAAAAh3/JWAAAAgVBMVEX///8hISEAAAAeHh6/v7+lpaUHBwckJCQXFxcaGho5OTleXl4UFBQZGRkVFRUQEBD29vbw8PCJiYno6OjT09PGxsavr6/MzMwqKirg4OA3Nze2trZVVVXa2tpFRUViYmKUlJRqamp5eXmPj4+cnJxMTEwwMDCCgoJwcHBAQECEhIRzuIecAAAJc0lEQVR4nO2deXuiMBDGZaIoHuCJeKNVq/3+H3BFa5cJQROahNHy+2efdZcjLzlmJpOkVquoqKioqKioqKioqKh4K/qDhH7Zr0GJ/ngR7zpzFsA3bis6nIbhZFT2m5XLYBJvnESOoMUuON8w5nWvUq0/w1nZ71gK/clwDnBRxcnHu0jkbsM/VoUGYecizCNdfmA+wPFjXPYb26K/WAK0ZIT5ESgA5+MvNLDVDqCnosyPPutF2e9umPoaAnVlbngAH4OyC2COMAKvqDTf1Wf3pr1zyECqC35IAKc3lGdy1CDNTZ6vNzOiZwdN0tzkaZRdHp0MiwxQ+TA4r8ouki6mzJUqMvMSmEwV8+Cr7FLpYfekRbGue/U3o/NhuTysj97V/XzsWDiOG71B5VlFj6pN76JL+7Svr5AB059Nw+HSe+xhMIhLKpI2GvnVJglSdBrj/KFntPiMHjkacHjtYWsL+coch9PnNxglLmpeb+67L+yQDto5vkIPgqF0l9EPD3nti0Fo8v1NsnLFnzyAZV3tTqOhm9M84dPMu5tmIi7PxQEoEn0Im+LbwUb7i1sgFBamW9x1XETCO7oHra9thYaoK/Zg+xu3MQxEZkHQfrVBS6TNxer/7egi9EO689dSR6SNr8NfnK1Fd57//sb2CAUlgKWeMF5DEDDrrrXc2gr1rDZMX5hhdM7ePljqurtpVtlRJYh0Th58ZtWBk8b7G2TgZrTRbYwssvK/iBs6zwwo8KH7GbNWxh8FRau7FLYZf8qEA9TPuG0M6EfeM4M4g4mRBx14g9A7GnmORlZZbUyFFTq8Oi71TjlitrQRqAO0J4x3rj1tarVlwD+N8nTxlG9UhvqbO+sufpxP2Rbkp1VMB+r6EedKEG5YQ65R6bdveEacNciAqoM+4xpV0DH/TL4hBzvzzyzEAZvGrGnjoXtOHaA518f74mAnUa2DhyyPZvSCM3FspUL0OT+XpI/FBbha1kbVCX4wo+hFONwHtOcGnnDDIjiccxXHZn4R17BYZO/RkjTRC3ptm89ecB+GWq/DDVVGXaosa2REkBuwDsiO727tPn1c6qd5BhfGsR6U2/jpx/u0Ajs7NGBI2vDneTvN/ecwSv8aSfn1nOdCy8MqVHGcHvuPx+4/NyD1M5PsXbcoeOFSysXFw0VXslajAY45958byLeXFAe3a2Z1sHzCEo0Wsr6fTnE4r9eSXyfDAH02TzZhRqs42IkIYvVSGAJbx9Lmu1ZxsPtCyErupKcfWSB7mV5xYnwZmXaFa7R0CqNecUboLciMV7i5y5unesWprdNGeo/KPMQwbQEyX/o6zeJw1xGxA8/pQsq3Kt3i4HYFEunxFsADucI0nmZxavP0/dy9WikMwXU58tVZtzioeRPpdPZuwXfSLQ73lZQKYQoULnBj+Qt1i9PH4pDIZUKmqUrmgG5xakdW8EJjcN9LIQlEuzi7dNyCRI+MggXMU7hSuzjIx5MNnBgFhdZbKjm12sVBWQUkwuyoLIFK0ol2cQaFK7EpPtPWhVK2knZxami1IwUHYpOOVygZ7frFQY4MhbEczVgphVH0i9NJx0opzF5h40IlnVO/OGgsN5ysKQVKklSy2fWL84H6PwLZFumisK7KlfrFQW4egTXnyEBWi2vrFwddSmCXHSyO0mJL/eIgE5mcOEozjYbFIRBjr8R5QNWsHlB1yI9ARZGe7Ux4/6GcMwJVnL0/YATOCbkPJ2ruA13Hk8ASkS0KWah8Lf3itKmFLL4IBbvIzZbjMOlQ4UrDYVLn+QXGQQH2nsriPMMBdgrbVaEUYPm0rpoBcdCVXQoLGglN6p3ITerhFXqlTgfjN6EwHVzbphMJVCaudIszIJhIgFNQFLpB3eKgoYHRSEGZUkleQtOLLQuL2iXgemT5wugWB00S0eiPuRxXhRFUszizghm/ZkGBAuZKX6dZnD055yFhWjDHVbM4KHaiZKobBaf3S7crveLgVkUguv4NXmEpXaH1ioMaNxErJwEv1JMOW+gVx0d3o7OVKx7MvbPkZVrFwR+IykCegBKYpEdRreKc0cJ2Osut+P0IfMmsSZ3i4GX3JJIlf+CWTst9N9Zt9XqthMsf3d795wYkv1z/qdfrSYrTwXWXwJTVf1Ag2fHldmvYdBD3nxfL9K9LKbOJ3xGBiAV4g98RwPasCF67TW1XM/x2ttfzTEv+Nk/g9oayPNs498r8NM9B8QLL67obpX4ZCfjdj2J7j8bhUcu7PsmBq45NM2yDt2+lEVnHcBtTSTsRv2ZR1oNVmHNVJ7bz2AG3dyuRNdMc/B6qlgKVeDMzslsid1BYx2GBDTt1WM6OqMqMuPf0LUzl87vFumTP94z5r2jcjOe3YFZKZLAMN5w7YDjmNOAPIqQ4jN/JnPpgNqOzf+RObgksb96oBt89mv2UZ27zfuaSClVkaPOn8Bh0dNb8cTP0nCoMv52+wbqT1YbsSHVnwTcsQ/1O9piiFkm/AbPLqmNgzBo5PvcU5lI+S+UOf8aJCXtnmj11kEpaxWP6TubF3bXeYURw0DetCYd8sp2y0wp0+sqCg75BJTu8VMbZl2f6zp0ZN7MHfQNp6w8jOMjTgbYef/lDcLzy6xzjmZAd0JNTlTVUnulRcOeAQia/AiJ1HNf5pUE4OIlO5X41bXLUYXD4zXxbDNne5iL5S7WpG+KD7nvQKSrPHkSnlb/oUfdjwfHQTnIyd6fAsD6IXaHYFgJqZhg1M7byd+05hmpG4fgE2QOJb9oQSuFSo38QdTxO0vfASTq8MNofQazyZQAkHPl7ype4LVxbF5zqz13FcTzPqzTJQd9kckYLUYfM8dA/dAHOw3pu+frjxsYHPkqcrn4vZBaLGaxzmtatXQQAsPxqTFaD/71QfzZexKcIwG3lKpP0XC/iaj4khswB5lwxA/ciEfjN43x+jNj1L4H/QJcEOL92k7ozOz+qPD/cT5eR+b+t1x2lMjSEpm1hGCzfo9rcuDhFQouwENB85QFcxPigR55Ll/Q+Leo/k/Pv5blI80F74q4wkzXwcwZq0gDEbypNwnibb+8+w4eIzAozQwxilucpPcID2JDMZ9PN9ATQVak/ngvrxitM2elhsuuC+8RwvsEuDsah8U5mjQyr/TJxE7x8x5L5F2Hmn/U37oMfsQo/z4krFXR73t1vSI6t9K/eVnMTT/5OYxIzmobxrrM+MrgSRO3Dadior/5ohamoqKioqKioqKigyj+1JnlNAaVbcAAAAABJRU5ErkJggg=="></img></button>
-            <button id="step">1 Step</button>
-            <button id="line"> Even Smaller Step</button>
-            <button id="reset" onClick={this.toggleResetParameters}>Reset</button>
+            <button id="stepRET">1 Step</button>
+            <button id="lineRET"> Even Smaller Step</button>
+            <button id="resetRET" onClick={console.log("m")}>Reset</button>
           </div>
         </div>)
     } else {
@@ -856,9 +1026,9 @@ class LowerControlUI extends React.Component {
         <div id="lowerControlUI">
           Simulation Control
           <div>
-            <button id="play"><img width="25" height="25" src="https://media.istockphoto.com/vectors/vector-play-button-icon-vector-id1066846868?k=20&m=1066846868&s=612x612&w=0&h=BikDjIPuOmb08aDFeDiEwDiKosX7EgnvtdQyLUvb3eA="></img></button>
-            <button id="pause"><img width="40" height="25" src="data:image/png;base64,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"></img></button>
-            <button id="reset" onClick={this.toggleResetParameters}>Reset</button>
+            <button id="playMotionModel"><img width="25" height="25" src="https://media.istockphoto.com/vectors/vector-play-button-icon-vector-id1066846868?k=20&m=1066846868&s=612x612&w=0&h=BikDjIPuOmb08aDFeDiEwDiKosX7EgnvtdQyLUvb3eA="></img></button>
+            <button id="pauseMotionModel"><img width="40" height="25" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAARwAAACxCAMAAAAh3/JWAAAAgVBMVEX///8hISEAAAAeHh6/v7+lpaUHBwckJCQXFxcaGho5OTleXl4UFBQZGRkVFRUQEBD29vbw8PCJiYno6OjT09PGxsavr6/MzMwqKirg4OA3Nze2trZVVVXa2tpFRUViYmKUlJRqamp5eXmPj4+cnJxMTEwwMDCCgoJwcHBAQECEhIRzuIecAAAJc0lEQVR4nO2deXuiMBDGZaIoHuCJeKNVq/3+H3BFa5cJQROahNHy+2efdZcjLzlmJpOkVquoqKioqKioqKioqKh4K/qDhH7Zr0GJ/ngR7zpzFsA3bis6nIbhZFT2m5XLYBJvnESOoMUuON8w5nWvUq0/w1nZ71gK/clwDnBRxcnHu0jkbsM/VoUGYecizCNdfmA+wPFjXPYb26K/WAK0ZIT5ESgA5+MvNLDVDqCnosyPPutF2e9umPoaAnVlbngAH4OyC2COMAKvqDTf1Wf3pr1zyECqC35IAKc3lGdy1CDNTZ6vNzOiZwdN0tzkaZRdHp0MiwxQ+TA4r8ouki6mzJUqMvMSmEwV8+Cr7FLpYfekRbGue/U3o/NhuTysj97V/XzsWDiOG71B5VlFj6pN76JL+7Svr5AB059Nw+HSe+xhMIhLKpI2GvnVJglSdBrj/KFntPiMHjkacHjtYWsL+coch9PnNxglLmpeb+67L+yQDto5vkIPgqF0l9EPD3nti0Fo8v1NsnLFnzyAZV3tTqOhm9M84dPMu5tmIi7PxQEoEn0Im+LbwUb7i1sgFBamW9x1XETCO7oHra9thYaoK/Zg+xu3MQxEZkHQfrVBS6TNxer/7egi9EO689dSR6SNr8NfnK1Fd57//sb2CAUlgKWeMF5DEDDrrrXc2gr1rDZMX5hhdM7ePljqurtpVtlRJYh0Th58ZtWBk8b7G2TgZrTRbYwssvK/iBs6zwwo8KH7GbNWxh8FRau7FLYZf8qEA9TPuG0M6EfeM4M4g4mRBx14g9A7GnmORlZZbUyFFTq8Oi71TjlitrQRqAO0J4x3rj1tarVlwD+N8nTxlG9UhvqbO+sufpxP2Rbkp1VMB+r6EedKEG5YQ65R6bdveEacNciAqoM+4xpV0DH/TL4hBzvzzyzEAZvGrGnjoXtOHaA518f74mAnUa2DhyyPZvSCM3FspUL0OT+XpI/FBbha1kbVCX4wo+hFONwHtOcGnnDDIjiccxXHZn4R17BYZO/RkjTRC3ptm89ecB+GWq/DDVVGXaosa2REkBuwDsiO727tPn1c6qd5BhfGsR6U2/jpx/u0Ajs7NGBI2vDneTvN/ecwSv8aSfn1nOdCy8MqVHGcHvuPx+4/NyD1M5PsXbcoeOFSysXFw0VXslajAY45958byLeXFAe3a2Z1sHzCEo0Wsr6fTnE4r9eSXyfDAH02TzZhRqs42IkIYvVSGAJbx9Lmu1ZxsPtCyErupKcfWSB7mV5xYnwZmXaFa7R0CqNecUboLciMV7i5y5unesWprdNGeo/KPMQwbQEyX/o6zeJw1xGxA8/pQsq3Kt3i4HYFEunxFsADucI0nmZxavP0/dy9WikMwXU58tVZtzioeRPpdPZuwXfSLQ73lZQKYQoULnBj+Qt1i9PH4pDIZUKmqUrmgG5xakdW8EJjcN9LIQlEuzi7dNyCRI+MggXMU7hSuzjIx5MNnBgFhdZbKjm12sVBWQUkwuyoLIFK0ol2cQaFK7EpPtPWhVK2knZxami1IwUHYpOOVygZ7frFQY4MhbEczVgphVH0i9NJx0opzF5h40IlnVO/OGgsN5ysKQVKklSy2fWL84H6PwLZFumisK7KlfrFQW4egTXnyEBWi2vrFwddSmCXHSyO0mJL/eIgE5mcOEozjYbFIRBjr8R5QNWsHlB1yI9ARZGe7Ux4/6GcMwJVnL0/YATOCbkPJ2ruA13Hk8ASkS0KWah8Lf3itKmFLL4IBbvIzZbjMOlQ4UrDYVLn+QXGQQH2nsriPMMBdgrbVaEUYPm0rpoBcdCVXQoLGglN6p3ITerhFXqlTgfjN6EwHVzbphMJVCaudIszIJhIgFNQFLpB3eKgoYHRSEGZUkleQtOLLQuL2iXgemT5wugWB00S0eiPuRxXhRFUszizghm/ZkGBAuZKX6dZnD055yFhWjDHVbM4KHaiZKobBaf3S7crveLgVkUguv4NXmEpXaH1ioMaNxErJwEv1JMOW+gVx0d3o7OVKx7MvbPkZVrFwR+IykCegBKYpEdRreKc0cJ2Osut+P0IfMmsSZ3i4GX3JJIlf+CWTst9N9Zt9XqthMsf3d795wYkv1z/qdfrSYrTwXWXwJTVf1Ag2fHldmvYdBD3nxfL9K9LKbOJ3xGBiAV4g98RwPasCF67TW1XM/x2ttfzTEv+Nk/g9oayPNs498r8NM9B8QLL67obpX4ZCfjdj2J7j8bhUcu7PsmBq45NM2yDt2+lEVnHcBtTSTsRv2ZR1oNVmHNVJ7bz2AG3dyuRNdMc/B6qlgKVeDMzslsid1BYx2GBDTt1WM6OqMqMuPf0LUzl87vFumTP94z5r2jcjOe3YFZKZLAMN5w7YDjmNOAPIqQ4jN/JnPpgNqOzf+RObgksb96oBt89mv2UZ27zfuaSClVkaPOn8Bh0dNb8cTP0nCoMv52+wbqT1YbsSHVnwTcsQ/1O9piiFkm/AbPLqmNgzBo5PvcU5lI+S+UOf8aJCXtnmj11kEpaxWP6TubF3bXeYURw0DetCYd8sp2y0wp0+sqCg75BJTu8VMbZl2f6zp0ZN7MHfQNp6w8jOMjTgbYef/lDcLzy6xzjmZAd0JNTlTVUnulRcOeAQia/AiJ1HNf5pUE4OIlO5X41bXLUYXD4zXxbDNne5iL5S7WpG+KD7nvQKSrPHkSnlb/oUfdjwfHQTnIyd6fAsD6IXaHYFgJqZhg1M7byd+05hmpG4fgE2QOJb9oQSuFSo38QdTxO0vfASTq8MNofQazyZQAkHPl7ype4LVxbF5zqz13FcTzPqzTJQd9kckYLUYfM8dA/dAHOw3pu+frjxsYHPkqcrn4vZBaLGaxzmtatXQQAsPxqTFaD/71QfzZexKcIwG3lKpP0XC/iaj4khswB5lwxA/ciEfjN43x+jNj1L4H/QJcEOL92k7ozOz+qPD/cT5eR+b+t1x2lMjSEpm1hGCzfo9rcuDhFQouwENB85QFcxPigR55Ll/Q+Leo/k/Pv5blI80F74q4wkzXwcwZq0gDEbypNwnibb+8+w4eIzAozQwxilucpPcID2JDMZ9PN9ATQVak/ngvrxitM2elhsuuC+8RwvsEuDsah8U5mjQyr/TJxE7x8x5L5F2Hmn/U37oMfsQo/z4krFXR73t1vSI6t9K/eVnMTT/5OYxIzmobxrrM+MrgSRO3Dadior/5ohamoqKioqKioqKigyj+1JnlNAaVbcAAAAABJRU5ErkJggg=="></img></button>
+            <button id="resetMotionModel" onClick={this.toggleResetParameters}>Reset</button>
           </div>
         </div>)
     }
@@ -882,7 +1052,7 @@ class RightParameterUI extends React.Component {
   }
   //handling limits on parameters inputted by the user
   handleDistBackTwoWheelsChange(e) {
-    if (e.target.value <= 10 || e.target.value > 50) {
+    if (e.target.value <= 30 || e.target.value > 200) {
     } else {
       this.props.onDistBackTwoWheelsChange(e.target.value);
     }
@@ -1019,7 +1189,7 @@ class RightParameterUI extends React.Component {
           <input type="number" id="distFrontToBack" placeholder='0' onChange={this.handleDistFrontToBackChange}></input>
           <br></br>
 
-          <label for="distBetweenBackWheels">Distance Between Back Wheels (10 &#60; x &#8804; 50)</label>
+          <label for="distBetweenBackWheels">Distance Between Back Wheels (30 &#60; x &#8804; 200)</label>
           <br></br>
           <input type="number" id="distBetweenBackWheels" placeholder='0' onChange={this.handleDistBackTwoWheelsChange}></input>
           <br></br>
