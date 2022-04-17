@@ -54,11 +54,11 @@ class RRT {
        
         
         for ( let i = 0; i < nodes.length; i++ ) {
-            let d = this.distance(p, T.getNodeAtIndex(i));
+            let d = this.distance(p, T.getNodeIndex(i));
             
             if ( min_dist > d || min_dist == 0 ) {
                 min_dist = d;
-                n = T.getNodeAtIndex(i);
+                n = T.getNodeIndex(i);
             }
         }
         //n is returning undefined
