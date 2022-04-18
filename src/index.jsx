@@ -354,10 +354,10 @@ class Canvas extends React.Component {
         return;
       }
       //Does: prevents too many points to an object
-      if (coordinates[isDone].length > 10) {
-        alert("too many points")
-        return;
-      }
+      // if (coordinates[isDone].length > 10) {
+      //   alert("too many points")
+      //   return;
+      // }
       // Does: tell the browser we're handling this event
       e.preventDefault();
       e.stopPropagation();
@@ -368,22 +368,25 @@ class Canvas extends React.Component {
         context.beginPath();
         context.moveTo(mouseX, mouseY);
       } else {
+        context.lineWidth = 10;
         //Check distance and snap if close enough to start
         var a = coordinates[isDone][0].x - mouseX;
         var b = coordinates[isDone][0].y - mouseY;
         var c = Math.sqrt(a * a + b * b);
+
         if (c < 20) {
-          context.lineWidth = 2;
+
           context.strokeStyle = 'red';
           context.lineTo(mouseX, mouseY);
           context.stroke();
           fill();
         } else {
-          context.lineWidth = 2;
+
           context.strokeStyle = 'red';
           context.lineTo(mouseX, mouseY);
           context.stroke();
         }
+        context.lineWidth = 2;
       }
       //drawPolygon();
     }
@@ -415,21 +418,35 @@ class Canvas extends React.Component {
     }
     //Does: Plays algo
     $('#playRET').click(function () {
+
+
       var go = 'again';
-      //alert(typeof go)
-      //var boo = 10000
-      while ((typeof go) == 'string') {
-        //alert("boom")
+      playAlgo(go);
 
-        go = oneStep();
 
-        // boo--;
-      }
+      // while ((typeof go) == 'string') {
+
+
+      //   go = oneStep();
+
+
+      // }
 
 
 
 
     });
+    //recursive play for time delay
+    function playAlgo(go) {
+      if ((typeof go) == 'string') {
+
+        setTimeout(() => {
+          go = oneStep();
+          playAlgo(go);
+        }, 1000 / 30);
+
+      }
+    }
     //Does:  
     $('#reset').click(function () {
 
@@ -454,7 +471,14 @@ class Canvas extends React.Component {
       // context.arc(x, y, 2, 0, 2 * Math.PI);
       // context.stroke();
       var p = context.getImageData(x, y, 1, 1).data;
-      if (p[0] == 255 && p[1] == 0 && p[2] == 0) {
+      //&& p[1] == 0 && p[2] == 0
+      if (p[0] == 255) {
+        // alert()
+
+        context.fillStyle = `rgb(255, 255, 255)`;
+        context.beginPath();
+        context.arc(x, y, 2, 0, 2 * Math.PI);
+        context.fill();
         return false;
       } else {
         // if (p[0] == 0 && p[1] == 0 && p[2] == 255) {
@@ -467,6 +491,7 @@ class Canvas extends React.Component {
     function detectLineOfPixels(sx, sy, ex, ey) {
       //calculate slope maybe shouldnt madder but make spos smaller
       if (!isOpenPixel(ex, ey)) {
+
         return false;
       }
       var spos = [sx, sy];
@@ -529,11 +554,12 @@ class Canvas extends React.Component {
         var tempy = (slope * tempx) + yintercept;
 
         //if not open pixel return false meaning collision
-        // context.strokeStyle = 'green';
+        // context.strokeStyle = 'yellow';
         // context.beginPath();
-        // context.arc(tempx, tempy, 2, 0, 2 * Math.PI);
+        // context.arc(tempx, tempy, 1, 0, 2 * Math.PI);
         // context.stroke();
         if (!isOpenPixel(tempx, tempy)) {
+          //alert("hello")
 
           return false;
         }
@@ -545,7 +571,7 @@ class Canvas extends React.Component {
 
     $('#line').click(function () {
       goalCoord = [133, 133];
-      startCoord = [600, 300];
+      startCoord = [155, 155];
       context.strokeStyle = "blue"
       context.beginPath();
       context.arc(startCoord[0], startCoord[1], 3, 0, 2 * Math.PI);
