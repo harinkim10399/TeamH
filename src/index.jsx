@@ -468,16 +468,6 @@ class Canvas extends React.Component {
       playAlgo(go);
 
 
-      // while ((typeof go) == 'string') {
-
-
-      //   go = oneStep();
-
-
-      // }
-
-
-
 
     });
     //recursive play for time delay
@@ -487,7 +477,7 @@ class Canvas extends React.Component {
         setTimeout(() => {
           go = oneStep();
           playAlgo(go);
-        }, 1000 / 30);
+        }, 1000 / 60);
 
       }
     }
@@ -519,10 +509,7 @@ class Canvas extends React.Component {
       if (p[0] == 255) {
         // alert()
 
-        context.fillStyle = `rgb(255, 255, 255)`;
-        context.beginPath();
-        context.arc(x, y, 2, 0, 2 * Math.PI);
-        context.fill();
+
         return false;
       } else {
         // if (p[0] == 0 && p[1] == 0 && p[2] == 255) {
@@ -531,87 +518,34 @@ class Canvas extends React.Component {
         return true;
       }
     }
-    //returns false if their is an obstacle between 
-    function detectLineOfPixels(sx, sy, ex, ey) {
-      //calculate slope maybe shouldnt madder but make spos smaller
-      if (!isOpenPixel(ex, ey)) {
 
+    //new idea 
+
+
+    //return if the distance is greater
+    function midpointCalc(sx, sy, ex, ey) {
+      //check distance
+      var a = ex - sx;
+      var b = ey - sy;
+      var c = Math.sqrt(a * a + b * b);
+      //return true if distance is within limit
+      if (c < 4) {
+        return true;
+      }
+
+      //get midpoint 
+      var midx = (ex + sx) / 2;
+      var midy = (ey + sy) / 2;
+
+      //if point there return false
+      if (!isOpenPixel(midx, midy)) {
         return false;
       }
-      var spos = [sx, sy];
-      var epos = [ex, ey];
 
-      //spos must always be smaller
-      var a1 = 0 - spos[0];
-      var b1 = 0 - spos[1];
-      var c1 = Math.sqrt(a1 * a1 + b1 * b1);
-      var a2 = 0 - epos[0];
-      var b2 = 0 - epos[1];
-      var c2 = Math.sqrt(a2 * a2 + b2 * b2);
-      //if spos is bigger swap
-      if (c1 > c2) {
-
-        var temp = epos;
-        epos = spos;
-        spos = temp
-      }
-
-      // context.strokeStyle = "blue";
-      // context.beginPath();
-      // context.arc(epos[0], epos[1], 5, 0, 2 * Math.PI);
-      // context.stroke()
-      // context.beginPath();
-      // context.arc(spos[0], spos[1], 5, 0, 2 * Math.PI);
-      // context.stroke();
-      var slope = (spos[1] - epos[1]) / (spos[0] - epos[0]);
-      //console.log(slope);
-      //calc b 
-      var yintercept = spos[1] - slope * spos[0];
-      //console.log("slope " + slope + " intercept " + yintercept);
-      //distance formula to determine scalar
-      var scalar = 1;
-      var c = 9999;
-      //scaler should get distance every 8 distance 
-      while (c > 15) {
-        //distance from firstposition to new scaled one
-        var newx = epos[0] * scalar + spos[0];
-        var newy = (slope * newx) + yintercept;
-
-        var a = spos[0] - newx;
-        var b = spos[1] - newy;
-        //reduce scalar
-        scalar = scalar / 2;
-        //check if the the distance is actually increasing
-        //console.log("did go");
-        if (c < Math.sqrt(a * a + b * b)) {
-          //console.log("wrong way");
-          //return false;
-        }
-        c = Math.sqrt(a * a + b * b);
-        //console.log(c + " " + scalar)
-      }
-      //figure out what points to search 
-      var secondScaler = 0;
-      var tempx = spos[0];
-      while (tempx < epos[0]) {
-        tempx = epos[0] * scalar + secondScaler + spos[0];
-        var tempy = (slope * tempx) + yintercept;
-
-        //if not open pixel return false meaning collision
-        // context.strokeStyle = 'yellow';
-        // context.beginPath();
-        // context.arc(tempx, tempy, 1, 0, 2 * Math.PI);
-        // context.stroke();
-        if (!isOpenPixel(tempx, tempy)) {
-          //alert("hello")
-
-          return false;
-        }
-
-        secondScaler += 1;
-      }
-      return true;
+      // call function twice both with midpoints 
+      return (midpointCalc(sx, sy, midx, midy) && midpointCalc(midx, midy, ex, ey))
     }
+
 
     $('#line').click(function () {
       goalCoord = [133, 133];
@@ -625,7 +559,7 @@ class Canvas extends React.Component {
       context.beginPath();
       context.arc(goalCoord[0], goalCoord[1], 3, 0, 2 * Math.PI);
       context.stroke();
-      detectLineOfPixels(goalCoord[0], goalCoord[1], startCoord[0], startCoord[1]);
+      //detectLineOfPixels(goalCoord[0], goalCoord[1], startCoord[0], startCoord[1]);
 
 
 
@@ -668,24 +602,21 @@ class Canvas extends React.Component {
         tree = new RRT(startCoord, goalCoord, 30, 0, 10, .1, [cw, ch]);
       }
 
-      //constructor (start, goal, step_size, collision_resolution, goal_resolution, goal_biasing, environment_boundaries)
-
-
-
-
-
       var node = tree.randomCheck();
       //detects for colision
-      var blocked = detectLineOfPixels(node.prev.x, node.prev.y, node.x, node.y);
+      var blocked = midpointCalc(node.prev.x, node.prev.y, node.x, node.y);
+      //detectLineOfPixels(node.prev.x, node.prev.y, node.x, node.y);
       //if colided
+      drawNodesAndLine(node.prev.x, node.prev.y, node.x, node.y, blocked);
       if (blocked == false) {
         go = tree.collide(node);
+
         return go;
       } else {
 
         //if no collision
         go = tree.move(node);
-        drawNodesAndLine(node.prev.x, node.prev.y, node.x, node.y, blocked);
+        //drawNodesAndLine(node.prev.x, node.prev.y, node.x, node.y, blocked);
         //if completed
 
 
@@ -697,16 +628,32 @@ class Canvas extends React.Component {
     }
 
     function drawNodesAndLine(x, y, x1, y1, isBlocked) {
+      var nodeColor = `rgb(0, 255, 0)`;
+      var lineColor = `rgb(0, 0, 255)`;
+      if (!isBlocked) {
+        nodeColor = `rgb(255, 0, 255)`;
+        lineColor = `rgb(255, 255, 0)`;
+      }
+
       x = parseInt(x);
       y = parseInt(y);
       x1 = parseInt(x1);
       y1 = parseInt(y1);
-      context.strokeStyle = 'blue';
+
       // context.strokeStyle = "#" + Math.floor(Math.random() * 16777215).toString(16)
       context.beginPath();
       context.moveTo(x, y);
       context.lineTo(x1, y1);
+      context.strokeStyle = lineColor;
       context.stroke();
+
+      context.beginPath();
+      context.fillStyle = nodeColor;
+      context.arc(x1, y1, 2, 0, 2 * Math.PI);
+      context.fill();
+
+
+
 
     }
   }
