@@ -430,7 +430,7 @@ class Canvas extends React.Component {
           context.lineTo(mouseX, mouseY);
           context.stroke();
         }
-        context.lineWidth = 2;
+        context.lineWidth = 1;
       }
       //drawPolygon();
     }
@@ -463,34 +463,40 @@ class Canvas extends React.Component {
     //Does: Plays algo
     $('#playRET').click(function () {
 
-
+      play = true;
       var go = 'again';
       playAlgo(go);
 
+    });
 
+    $('#pauseRET').click(function () {
+
+      play = false;
 
     });
     //recursive play for time delay
     function playAlgo(go) {
-      if ((typeof go) == 'string') {
+      if (play) {
+        if ((typeof go) == 'string') {
 
-        setTimeout(() => {
-          go = oneStep();
-          playAlgo(go);
-        }, 1000 / 60);
+          setTimeout(() => {
 
+            go = oneStep();
+
+            playAlgo(go);
+          }, 1000 / 60);
+
+        }
       }
     }
     //Does:  
-    $('#resetRRT').click(function () {
+    $('#resetRET').click(function () {
+      context.clearRect(0, 0, cw, ch);
 
+      drawPolygons()
 
-
-      if (startCoord != undefined) {
-        //branch(startCoord.x, startCoord.y);
-      }
     });
-    $('#step').click(function () {
+    $('#stepRET').click(function () {
 
       oneStep();
 
