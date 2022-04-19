@@ -308,6 +308,7 @@ class Canvas extends React.Component {
     //set values for playing
     var play = false;
     let tree = null;
+    var step = false;;
 
     //Does: deletes all obstacles
     $('#clear').click(function () {
@@ -444,7 +445,7 @@ class Canvas extends React.Component {
     //Does: Draws all stored obstacles 
     function drawPolygons() {
       //Does: setup drawing
-      context.lineWidth = 2;
+      context.lineWidth = 10;
       context.strokeStyle = 'red';
       for (var obstacle = 0; obstacle < coordinates.length - 1; obstacle++) {
         context.beginPath();
@@ -459,6 +460,7 @@ class Canvas extends React.Component {
         context.fill();
       }
       context.stroke();
+      context.lineWidth = 1;
     }
     //Does: Plays algo
     $('#playRET').click(function () {
@@ -497,10 +499,9 @@ class Canvas extends React.Component {
 
     });
     $('#stepRET').click(function () {
-
+      step = true;
       oneStep();
-
-
+      step = false;
 
     });
     //Does: Detects red pixel and returns true if it is not red 
@@ -613,7 +614,10 @@ class Canvas extends React.Component {
       var blocked = midpointCalc(node.prev.x, node.prev.y, node.x, node.y);
       //detectLineOfPixels(node.prev.x, node.prev.y, node.x, node.y);
       //if colided
+
       drawNodesAndLine(node.prev.x, node.prev.y, node.x, node.y, blocked);
+
+
       if (blocked == false) {
         go = tree.collide(node);
 
@@ -634,6 +638,9 @@ class Canvas extends React.Component {
     }
 
     function drawNodesAndLine(x, y, x1, y1, isBlocked) {
+      if (!step && !isBlocked) {
+        return;
+      }
       var nodeColor = `rgb(0, 255, 0)`;
       var lineColor = `rgb(0, 0, 255)`;
       if (!isBlocked) {
