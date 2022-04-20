@@ -431,7 +431,7 @@ class Canvas extends React.Component {
           context.lineTo(mouseX, mouseY);
           context.stroke();
         }
-        context.lineWidth = 1;
+        context.lineWidth = 2;
       }
       //drawPolygon();
     }
@@ -460,7 +460,7 @@ class Canvas extends React.Component {
         context.fill();
       }
       context.stroke();
-      context.lineWidth = 1;
+      context.lineWidth = 2;
     }
     //Does: Plays algo
     $('#playRET').click(function () {
