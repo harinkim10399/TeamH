@@ -499,6 +499,7 @@ class Canvas extends React.Component {
 
     });
     $('#stepRET').click(function () {
+      play = false;
       step = true;
       oneStep();
       step = false;
@@ -574,7 +575,7 @@ class Canvas extends React.Component {
 
 
     function oneStep() {
-      //alert("went")
+
       if (goalCoord == null || startCoord == null) {
         goalCoord = [300, 200];
         startCoord = [800, 200];
@@ -633,7 +634,7 @@ class Canvas extends React.Component {
         return go;
       }
 
-      alert(blocked);
+
 
     }
 
@@ -745,10 +746,9 @@ class Canvas extends React.Component {
       }
       function drawTrail(x, y) {
         ctx2.beginPath()
-        ctx2.rect(x, y, 3, 5)
+        ctx2.arc(x, y, 1, 0, 2 * Math.PI);
         ctx2.fillStyle = "lime"
         ctx2.fill()
-        ctx2.stroke();
       }
 
       function drawBody(x, y, width, theta) {
@@ -867,10 +867,11 @@ class Canvas extends React.Component {
       function drawTrail(x, y) {
 
         ctx2.beginPath()
-        ctx2.rect(x, y, 3, 5)
+        ctx2.arc(x, y, 1, 0, 2 * Math.PI);
+
         ctx2.fillStyle = "lime"
         ctx2.fill()
-        ctx2.stroke();
+
 
       }
 
@@ -1026,10 +1027,9 @@ class Canvas extends React.Component {
       function drawTrail(x, y) {
 
         ctx2.beginPath()
-        ctx2.rect(x, y, 3, 5)
+        ctx2.arc(x, y, 1, 0, 2 * Math.PI);
         ctx2.fillStyle = "lime"
         ctx2.fill()
-        ctx2.stroke();
 
       }
 
