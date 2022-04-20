@@ -311,18 +311,20 @@ class Canvas extends React.Component {
     var step = false;;
 
     //Does: deletes all obstacles
-    $('#clear').click(function () {
+    $('#delete').click(function () {
       context.clearRect(0, 0, cw, ch);
-
+      drawGoalandStart()
     });
 
-    //Does: Delete all of canvas and objects
-    $('#delete').click(function () {
+    //Does: Delete all of canvas and obstacles
+    $('#clear').click(function () {
       context.clearRect(0, 0, cw, ch);
       isDone = 0;
       coordinates = [];
       innerArray = [];
       coordinates.push(innerArray);
+      drawGoalandStart()
+
     });
     //Does: sets up buttons for start and goal for robot 
     //Does: setup initalize robot pos/ goal position 
@@ -358,7 +360,7 @@ class Canvas extends React.Component {
       if (startCoord != null) {
         context.beginPath();
         context.arc(startCoord.x, startCoord.y, 9, 0, 2 * Math.PI);
-        context.fillStyle = `rgb(233, 221, 221)`;
+        context.fillStyle = 'white';
         context.fill()
       }
 
@@ -381,7 +383,7 @@ class Canvas extends React.Component {
       if (goalCoord != null) {
         context.beginPath();
         context.arc(goalCoord.x, goalCoord.y, 9, 0, 2 * Math.PI);
-        context.fillStyle = `rgb(233, 221, 221)`;
+        context.fillStyle = 'white';
         context.fill()
       }
       context.beginPath();
@@ -394,13 +396,13 @@ class Canvas extends React.Component {
     function drawObstacle(e) {
       //Does: Stops when there is 5 shapes or there the current point has 10 coords.
       //Does: prevents too many objects
-      if (isDone > 5) {
-        alert("too much arrays")
-        return;
-      }
+      // if (isDone > 5) {
+      //  
+      //   return;
+      // }
       //Does: prevents too many points to an object
       // if (coordinates[isDone].length > 10) {
-      //   alert("too many points")
+
       //   return;
       // }
       // Does: tell the browser we're handling this event
@@ -457,10 +459,30 @@ class Canvas extends React.Component {
         context.closePath();
         //Colors/Fills Shapes
         context.fillStyle = 'red';
+        context.stroke();
+        context.fill();
+
+      }
+      // 
+      context.lineWidth = 2;
+    }
+
+    function drawGoalandStart() {
+
+      if (goalCoord != null) {
+        context.beginPath();
+        context.arc(goalCoord.x, goalCoord.y, 8, 0, 2 * Math.PI);
+        context.fillStyle = 'green';
         context.fill();
       }
-      context.stroke();
-      context.lineWidth = 2;
+
+      if (startCoord != null) {
+        context.beginPath();
+        context.arc(startCoord.x, startCoord.y, 8, 0, 2 * Math.PI);
+        context.fillStyle = 'blue';
+        context.fill();
+      }
+      return;
     }
     //Does: Plays algo
     $('#playRET').click(function () {
@@ -488,14 +510,37 @@ class Canvas extends React.Component {
             playAlgo(go);
           }, 1000 / 60);
 
+        } else {
+          if (tree != null) {
+            //draw path from last part of array 
+            //call prev until it its null
+            //console.log(go)
+            var node = go[1];
+            console.log(node);
+
+            node = node.nodes[node.nodes.length - 1];
+            //[go.length - 1]
+            var nodeNext = node.prev;
+            // node.prev;
+            while (nodeNext != null) {
+
+              drawFullPath(node.x, node.y, nodeNext.x, nodeNext.y);
+              node = nodeNext;
+              nodeNext = node.prev;
+            }
+
+          }
         }
       }
     }
     //Does:  
     $('#resetRET').click(function () {
-      context.clearRect(0, 0, cw, ch);
 
+      context.clearRect(0, 0, cw, ch);
+      tree = null;
       drawPolygons()
+      drawGoalandStart();
+
 
     });
     $('#stepRET').click(function () {
@@ -507,22 +552,16 @@ class Canvas extends React.Component {
     });
     //Does: Detects red pixel and returns true if it is not red 
     function isOpenPixel(x, y) {
-      // alert();
-      // context.strokeStyle = 'green';
-      // context.beginPath();
-      // context.arc(x, y, 2, 0, 2 * Math.PI);
-      // context.stroke();
+
       var p = context.getImageData(x, y, 1, 1).data;
-      //&& p[1] == 0 && p[2] == 0
+
       if (p[0] == 255) {
-        // alert()
+
 
 
         return false;
       } else {
-        // if (p[0] == 0 && p[1] == 0 && p[2] == 255) {
-        //   return false;
-        // }
+
         return true;
       }
     }
@@ -556,18 +595,6 @@ class Canvas extends React.Component {
 
 
     $('#line').click(function () {
-      goalCoord = [133, 133];
-      startCoord = [155, 155];
-      context.strokeStyle = "blue"
-      context.beginPath();
-      context.arc(startCoord[0], startCoord[1], 3, 0, 2 * Math.PI);
-      context.stroke();
-
-      context.strokeStyle = "green"
-      context.beginPath();
-      context.arc(goalCoord[0], goalCoord[1], 3, 0, 2 * Math.PI);
-      context.stroke();
-      //detectLineOfPixels(goalCoord[0], goalCoord[1], startCoord[0], startCoord[1]);
 
 
 
@@ -575,30 +602,16 @@ class Canvas extends React.Component {
 
 
     function oneStep() {
-
+      context.lineWidth = 2;
       if (goalCoord == null || startCoord == null) {
-        goalCoord = [300, 200];
-        startCoord = [800, 200];
-
-        context.strokeStyle = "blue"
-        context.beginPath();
-        context.arc(startCoord[0], startCoord[1], 3, 0, 2 * Math.PI);
-        context.stroke();
-
-        context.strokeStyle = "green"
-        context.beginPath();
-        context.arc(goalCoord[0], goalCoord[1], 3, 0, 2 * Math.PI);
-        context.stroke();
+        return;
 
 
       } else {
-        var tx = goalCoord.x;
-        var ty = goalCoord.y;
-        goalCoord = null
-        goalCoord = [tx, ty];
-        tx = startCoord.x;
-        ty = startCoord.y;
-        startCoord = [tx, ty];
+
+        var AlgoGoal = [goalCoord.x, goalCoord.y];
+        var AlgoStart = [startCoord.x, startCoord.y];
+
       }
 
 
@@ -607,14 +620,13 @@ class Canvas extends React.Component {
 
       var go = 'again';
       if (tree == null) {
-        tree = new RRT(startCoord, goalCoord, 30, 0, 10, .1, [cw, ch]);
+        tree = new RRT(AlgoStart, AlgoGoal, 20, 0, 8, .1, [cw, ch]);
       }
 
       var node = tree.randomCheck();
       //detects for colision
       var blocked = midpointCalc(node.prev.x, node.prev.y, node.x, node.y);
-      //detectLineOfPixels(node.prev.x, node.prev.y, node.x, node.y);
-      //if colided
+
 
       drawNodesAndLine(node.prev.x, node.prev.y, node.x, node.y, blocked);
 
@@ -637,7 +649,24 @@ class Canvas extends React.Component {
 
 
     }
+    function drawFullPath(x, y, x1, y1,) {
+      //alert()
+      x = parseInt(x);
+      y = parseInt(y);
+      x1 = parseInt(x1);
+      y1 = parseInt(y1);
 
+      context.beginPath();
+      context.moveTo(x, y);
+      context.lineTo(x1, y1);
+      context.strokeStyle = 'orange';
+      context.stroke();
+
+      context.beginPath();
+      context.fillStyle = 'black';
+      context.arc(x1, y1, 3, 0, 2 * Math.PI);
+      context.fill();
+    }
     function drawNodesAndLine(x, y, x1, y1, isBlocked) {
       if (!step && !isBlocked) {
         return;
