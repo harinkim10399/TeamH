@@ -361,12 +361,16 @@ class Canvas extends React.Component {
         context.beginPath();
         context.arc(startCoord.x, startCoord.y, 9, 0, 2 * Math.PI);
         context.fillStyle = 'white';
+        context.strokeStyle = 'white';
+        context.stroke();
         context.fill()
       }
 
       context.beginPath();
       context.arc(mouseX, mouseY, 8, 0, 2 * Math.PI);
       context.fillStyle = 'blue';
+      context.strokeStyle = 'blue';
+      context.stroke();
       context.fill()
       startCoord = { x: mouseX, y: mouseY };
       setStart = false;
@@ -378,17 +382,21 @@ class Canvas extends React.Component {
       e.stopPropagation();
       var mouseX = parseInt(e.clientX - offsetX);
       var mouseY = parseInt(e.clientY - offsetY);
-
+      context.lineWidth = 0;
       //Edge case that "erases previous drawn circle"
       if (goalCoord != null) {
         context.beginPath();
         context.arc(goalCoord.x, goalCoord.y, 9, 0, 2 * Math.PI);
         context.fillStyle = 'white';
+        context.strokeStyle = 'white';
+        context.stroke();
         context.fill()
       }
       context.beginPath();
       context.arc(mouseX, mouseY, 8, 0, 2 * Math.PI);
       context.fillStyle = 'green';
+      context.strokeStyle = 'green';
+      context.stroke();
       context.fill()
       goalCoord = { x: mouseX, y: mouseY };
       setGoal = false;
@@ -468,18 +476,23 @@ class Canvas extends React.Component {
     }
 
     function drawGoalandStart() {
-
+      context.lineWidth = 0;
       if (goalCoord != null) {
         context.beginPath();
         context.arc(goalCoord.x, goalCoord.y, 8, 0, 2 * Math.PI);
         context.fillStyle = 'green';
+        context.strokeStyle = 'green';
+        context.stroke();
         context.fill();
+
       }
 
       if (startCoord != null) {
         context.beginPath();
         context.arc(startCoord.x, startCoord.y, 8, 0, 2 * Math.PI);
         context.fillStyle = 'blue';
+        context.strokeStyle = 'blue';
+        context.stroke();
         context.fill();
       }
       return;
@@ -655,7 +668,7 @@ class Canvas extends React.Component {
       y = parseInt(y);
       x1 = parseInt(x1);
       y1 = parseInt(y1);
-
+      context.lineWidth = 2;
       context.beginPath();
       context.moveTo(x, y);
       context.lineTo(x1, y1);
@@ -663,8 +676,10 @@ class Canvas extends React.Component {
       context.stroke();
 
       context.beginPath();
+      context.lineWidth = 0;
       context.fillStyle = 'black';
       context.arc(x1, y1, 3, 0, 2 * Math.PI);
+      context.stroke();
       context.fill();
     }
     function drawNodesAndLine(x, y, x1, y1, isBlocked) {
