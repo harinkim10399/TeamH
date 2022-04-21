@@ -38,6 +38,10 @@ class tricycle {
             // in the variable R
             return this.straightMotion(-v, x, y, theta, t);
         }
+
+        if ( alpha < 0 ) {
+            v = -v;
+        }
         
         let R = d * Math.tan((Math.PI/2) - alpha);
         let omega = v/Math.sqrt(d**2 + R**2);
