@@ -45,8 +45,6 @@ class RRT {
     // p -> passed randomly generated point on canvas
     // T -> tree the nodes are in
     findNearest(p, T) {
-        //this was originally just 
-        //min_dist = 0;
 
         let min_dist = 0;
         let n = T.nodes[0];
@@ -59,9 +57,9 @@ class RRT {
             if ( min_dist > d || min_dist == 0 ) {
                 min_dist = d;
                 n = T.getNodeIndex(i);
+                
             }
         }
-        //n is returning undefined
        
         return n;
         
@@ -78,8 +76,6 @@ class RRT {
         let n = this.findNearest(p, T);
         let d = this.distance(p, n);
         
-        //changed because its a string
-        // let direction = [(p[0] - n.getX())/d + step, (p[1] - n.getY())/d] + step;
         let direction = [(p[0] - n.getX())/d, (p[1] - n.getY())/d] ;      
         let new_n = new node(n.getX() + (direction[0] * step), n.getY() + (direction[1] * step), n);
         
@@ -113,12 +109,11 @@ class RRT {
         let sample;
         
         if ( Math.random() < this.goal_biasing ) {
-            //changed from
-            //sample = [this.goal.getX(), this.goal.getY()];
-            //to 
             sample = this.goal;
+
         } else {
             sample = this.sampleRandom();
+        
         }
     
         let new_node = this.step(sample, this.T, this.step_size);
@@ -145,8 +140,6 @@ class RRT {
         
         this.T.insert(n);
         let left = [n.getX(), n.getY()];
-        //changed
-        //if ( this.distance(left, this.goal) < this.goal_resolution ) {
         if ( this.distance1(left, this.goal) < this.goal_resolution ) {
             //alert("made it")
             return this.extractPath(this.T, n);
