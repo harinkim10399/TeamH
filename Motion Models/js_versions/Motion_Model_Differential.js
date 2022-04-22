@@ -40,6 +40,7 @@ class diff {
             return this.straightMotion(v_l, x, y, theta, t);
         }
 
+        
         // find turning radius of motion
         let R = (L/2) * (v_l + v_r)/(v_r - v_l);
         // angular speed of "particle" moving around the ICC
