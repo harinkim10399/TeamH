@@ -105,6 +105,17 @@ button {
   background-color: rgb(173, 216, 230);
 }
 
+#foot {
+  padding: 30px;
+  border-radius: 5px;
+  grid-column-start: 1;
+  grid-column-end: 4;
+  grid-row-start: 9;
+  grid-row-end: 10;
+  background-color: rgb(173, 216, 230);
+}
+  
+
 @media only screen and (max-width: 700px) {
 
   body {

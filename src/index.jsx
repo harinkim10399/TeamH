@@ -160,7 +160,7 @@ class App extends React.Component {
   render() {
     switch (this.state.page) {
       case 'RET':
-        return (<><Navbar togglePage={this.togglePage} /><Canvas jQuery={this.state.page} /><RightDrawingUI /><LowerControlUI jQuery={this.state.page} /></>)
+        return (<><Navbar togglePage={this.togglePage} /><Canvas jQuery={this.state.page} /><RightDrawingUI /><LowerControlUI jQuery={this.state.page} /><Footer /></>)
         break;
       case 'Diff. Drive':
         return (<><Navbar toggleResetParameters={this.toggleResetParameters} togglePage={this.togglePage} /><Canvas
@@ -174,7 +174,7 @@ class App extends React.Component {
             onLeftWheelRadiusChange={this.handleLeftWheelRadiusChange}
             onRightWheelRadiusChange={this.handleRightWheelRadiusChange}
             onDistBetweenWheelsChange={this.handleDistBetweenWheelsChange}
-            jQuery={this.state.page} /><LowerControlUI jQuery={this.state.page} toggleResetParameters={this.toggleResetParameters} /></>)
+            jQuery={this.state.page} /><LowerControlUI jQuery={this.state.page} toggleResetParameters={this.toggleResetParameters} /><Footer /></>)
         break;
       case 'Bicycle':
         return (<><Navbar togglePage={this.togglePage} /><Canvas jQuery={this.state.page}
@@ -187,7 +187,7 @@ class App extends React.Component {
             onSteeringAngleChange={this.handleSteeringAngleChange}
             onFrontWheelRadiusChange={this.handleFrontWheelRadiusChange}
             onDistFrontToBackChange={this.handleDistFrontToBackChange}
-            jQuery={this.state.page} /><LowerControlUI jQuery={this.state.page} toggleResetParameters={this.toggleResetParameters} /></>)
+            jQuery={this.state.page} /><LowerControlUI jQuery={this.state.page} toggleResetParameters={this.toggleResetParameters} /><Footer /></>)
         break;
       case 'Tricycle':
         return (<><Navbar togglePage={this.togglePage} /><Canvas
@@ -201,7 +201,7 @@ class App extends React.Component {
             onDistBackTwoWheelsChange={this.handleDistBackTwoWheelsChange}
             onFrontWheelRadiusChange={this.handleFrontWheelRadiusChange}
             onDistFrontToBackChange={this.handleDistFrontToBackChange}
-            jQuery={this.state.page} /><LowerControlUI jQuery={this.state.page} toggleResetParameters={this.toggleResetParameters} /></>)
+            jQuery={this.state.page} /><LowerControlUI jQuery={this.state.page} toggleResetParameters={this.toggleResetParameters} /><Footer /></>)
         break;
       default:
         return (<><Navbar togglePage={this.togglePage} /><HomePage /></>)
@@ -1400,6 +1400,16 @@ class RightDrawingUI extends React.Component {
         <br></br>
         <button id="start">Click to set start</button>
       </div>
+    </div>)
+  }
+}
+
+class Footer extends React.Component {
+  render() {
+    return (<div id="foot">
+      <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
+      <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
+      <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
     </div>)
   }
 }
