@@ -10,8 +10,10 @@ class App extends React.Component {
   INTERCHANGEABLY. ALL STATE CHANGES ARE MADE, HOWEVER, BY "CHILD" CLASSES VIA EVENT HANDLERS. THINK ENCAPSULATION FROM COMP401.
   Also, the constructor(props) {super(props)} syntax is not just a formality. You cannot use this keyword methods without calling the parent
   constructor, which in this case is the React.Component class */
+  //the reason why console.log() proceeds all the state setters is to ensure that the state sets properly before calling anything else
   constructor(props) {
     super(props);
+    //set up all parameters
     this.state = {
       page: '',
       steeringAngle: 0,
@@ -42,7 +44,7 @@ class App extends React.Component {
     this.handleLeftWheelRadiusChange = this.handleLeftWheelRadiusChange.bind(this);
     this.handleRightWheelRadiusChange = this.handleRightWheelRadiusChange.bind(this);
   }
-
+  //reset parameters to 0 when hitting "reset" button
   toggleResetParameters = () => {
     this.setState({
       steeringAngle: 0,
@@ -59,7 +61,7 @@ class App extends React.Component {
       console.log('');
     });
   }
-
+  //reset all parameters to 0 when switching in between pages to ensure motion models don't continue to run in background
   togglePage = (num) => {
     this.setState({
       page: num,
@@ -76,6 +78,7 @@ class App extends React.Component {
     }, () => {
       console.log('');
     });
+    //clear out all the input fields to ensure user doesn't get confused when motion model doesn't render via JQuery
     switch (this.state.page) {
       case 'Diff. Drive':
         document.getElementById('leftWheelRadius').value = '';
@@ -97,12 +100,12 @@ class App extends React.Component {
         document.getElementById('angularVelocity').value = '';
         document.getElementById('distBetweenBackWheels').value = '';
         break;
+      //for some reason causes an error if you don't add the following case.
       case "RET":
         break;
     }
-
   };
-
+  //state setters (syntax much more complex than Java)
   handleSteeringAngleChange = (num) => {
     this.setState({ steeringAngle: num }, () => {
       console.log('');
@@ -219,7 +222,9 @@ class App extends React.Component {
 class HomePage extends React.Component {
   render() {
     return (<div class="center">
-      <img src="https://media.istockphoto.com/photos/cute-blue-robot-giving-thumbs-up-3d-picture-id1350820098?b=1&k=20&m=1350820098&s=170667a&w=0&h=8gO4GcPH-wsEZS6PYn2WXbQN3ZPPv98vE6mBl-Ckwr8=" />
+      <p>Welcome to the Interactive Robotics Education Tool! This web application is designed to help visualize some important robotics concepts through hands-on manipulation.  
+         To begin, click on the Navbar above either on "Pathfinding Algorithms" or on "Motion Models". 
+      <br></br><br></br>Application developed by Avery Clark, Felimon Holland, Adam Nguyen, and Owen Zook for COMP523, Spring 2022. Visit our website for the project <a target = "_blank" href = "https://tarheels.live/comp523teaml/"><b>here</b></a></p>
     </div>)
   }
 }
@@ -229,6 +234,7 @@ class Navbar extends React.Component {
     super(props);
     this.togglePage = this.togglePage.bind(this)
   }
+  //these methods are defined to call the parent method of the same name
   togglePage(e) {
     this.props.togglePage(e.target.name)
   }
@@ -285,7 +291,7 @@ class Canvas extends React.Component {
 
     establishCanvas()
     var canvas = document.getElementById("canvas");
-    document.getElementById("canvas").style.backgroundColor = "white";
+    document.getElementById("canvas").style.backgroundColor = "#e6edee";
     var context = canvas.getContext("2d");
     var cw = canvas.width;
     var ch = canvas.height;
@@ -409,18 +415,7 @@ class Canvas extends React.Component {
       setGoal = false;
     };
     function drawObstacle(e) {
-      //Does: Stops when there is 5 shapes or there the current point has 10 coords.
-      //Does: prevents too many objects
-      // if (isDone > 5) {
-      //  
-      //   return;
-      // }
-      //Does: prevents too many points to an object
-      // if (coordinates[isDone].length > 10) {
-
-      //   return;
-      // }
-      // Does: tell the browser we're handling this event
+     // Does: tell the browser we're handling this event
       e.preventDefault();
       e.stopPropagation();
       var mouseX = parseInt(e.clientX - offsetX);
@@ -443,14 +438,12 @@ class Canvas extends React.Component {
           context.stroke();
           fill();
         } else {
-
           context.strokeStyle = 'red';
           context.lineTo(mouseX, mouseY);
           context.stroke();
         }
         context.lineWidth = 2;
       }
-      //drawPolygon();
     }
     function fill() {
       context.fillStyle = 'red';
@@ -478,7 +471,7 @@ class Canvas extends React.Component {
         context.fill();
 
       }
-      // 
+    
       context.lineWidth = 2;
     }
 
@@ -534,14 +527,13 @@ class Canvas extends React.Component {
           if (tree != null) {
             //draw path from last part of array 
             //call prev until it its null
-            //console.log(go)
             var node = go[1];
-            console.log(node);
+    
 
             node = node.nodes[node.nodes.length - 1];
-            //[go.length - 1]
+            
             var nodeNext = node.prev;
-            // node.prev;
+        
             while (nodeNext != null) {
 
               drawFullPath(node.x, node.y, nodeNext.x, nodeNext.y);
@@ -586,7 +578,7 @@ class Canvas extends React.Component {
       }
     }
 
-    //new idea 
+  
 
 
     //return if the distance is greater
@@ -659,8 +651,6 @@ class Canvas extends React.Component {
 
         //if no collision
         go = tree.move(node);
-        //drawNodesAndLine(node.prev.x, node.prev.y, node.x, node.y, blocked);
-        //if completed
 
 
         return go;
@@ -670,7 +660,7 @@ class Canvas extends React.Component {
 
     }
     function drawFullPath(x, y, x1, y1,) {
-      //alert()
+    
       x = parseInt(x);
       y = parseInt(y);
       x1 = parseInt(x1);
@@ -705,7 +695,7 @@ class Canvas extends React.Component {
       x1 = parseInt(x1);
       y1 = parseInt(y1);
 
-      // context.strokeStyle = "#" + Math.floor(Math.random() * 16777215).toString(16)
+     
       context.beginPath();
       context.moveTo(x, y);
       context.lineTo(x1, y1);
@@ -913,8 +903,6 @@ class Canvas extends React.Component {
 
       }
       //check rotation
-      //bodyCenter(startX, startY);
-      //wheelCenter(startX, startY, DistFrontToBack);
       function drawTrail(x, y) {
 
         ctx2.beginPath()
@@ -1073,8 +1061,6 @@ class Canvas extends React.Component {
         ctx.restore();
       }
       //check rotation
-      //bodyCenter(startX, startY);
-      //wheelCenter(startX, startY, DistFrontToBack);
       function drawTrail(x, y) {
 
         ctx2.beginPath()
@@ -1205,7 +1191,7 @@ class LowerControlUI extends React.Component {
             <button id="playRET"><img width="25" height="25" src="https://media.istockphoto.com/vectors/vector-play-button-icon-vector-id1066846868?k=20&m=1066846868&s=612x612&w=0&h=BikDjIPuOmb08aDFeDiEwDiKosX7EgnvtdQyLUvb3eA="></img></button>
             <button id="pauseRET"><img width="40" height="25" src="data:image/png;base64,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"></img></button>
             <button id="stepRET">1 Step</button>
-            <button id="resetRET" onClick={console.log("m")}>Reset</button>
+            <button id="resetRET">Reset</button>
           </div>
         </div>)
     } else {
@@ -1410,7 +1396,7 @@ class RightDrawingUI extends React.Component {
     </div>)
   }
 }
-
+//footers for added information
 class Footer extends React.Component {
   render() {
     switch(this.props.jQuery) {
