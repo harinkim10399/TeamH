@@ -1,11 +1,11 @@
 body {
   text-align: center;
-  width: auto;
-  height: auto;
+  width: 100vw;
+  height: 100vh;
   margin: 0;
   display: grid;
-  grid-template-columns: auto auto 28%;
-  grid-template-rows: 10% 20% 23% 25%;
+  grid-template-columns: 80vw 20vw;
+  grid-template-rows: 8vh 62vh 15vh auto;
   grid-gap: 0.5rem;
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen,
     Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
@@ -23,9 +23,9 @@ button {
 
 .center {
   grid-column-start: 1;
-  grid-column-end: 4;
+  grid-column-end: 3;
   grid-row-start:2;
-  grid-row-end:4;
+  grid-row-end:5;
   height:100vh;
   background-repeat: no-repeat;
   background-size: cover;
@@ -70,7 +70,7 @@ button {
 #naving {
   border-radius: 5px;
   grid-column-start: 1;
-  grid-column-end: 4;
+  grid-column-end: 3;
   grid-row-start: 1;
   grid-row-end: 2;
   background-color: black;
@@ -81,9 +81,9 @@ button {
   position:relative;
   border-radius: 5px;
   grid-column-start: 1;
-  grid-column-end: 3;
+  grid-column-end: 2;
   grid-row-start: 2;
-  grid-row-end: 5;
+  grid-row-end: 3;
   background-color: rgb(173, 216, 230);
 }
 
@@ -113,19 +113,19 @@ button {
 #lowerControlUI {
   border-radius: 5px;
   grid-column-start: 1;
-  grid-column-end: 4;
-  grid-row-start: 5;
-  grid-row-end: 6;
+  grid-column-end: 3;
+  grid-row-start: 3;
+  grid-row-end: 4;
   background-color: rgb(173, 216, 230);
 }
 
 #rightParameterUI {
   overflow:hidden;
   border-radius: 5px;
-  grid-column-start: 3;
-  grid-column-end: 4;
+  grid-column-start: 2;
+  grid-column-end: 3;
   grid-row-start: 2;
-  grid-row-end: 5;
+  grid-row-end: 3;
   padding-bottom: 30px;
   background-color: rgb(173, 216, 230);
 }
@@ -133,10 +133,10 @@ button {
 #rightDrawingUI {
   display:inline-block;
   border-radius: 5px;
-  grid-column-start: 3;
-  grid-column-end: 4;
+  grid-column-start: 2;
+  grid-column-end: 3;
   grid-row-start: 2;
-  grid-row-end: 5;
+  grid-row-end: 3;
   background-color: rgb(173, 216, 230);
 }
 
@@ -144,9 +144,9 @@ button {
   padding: 30px;
   border-radius: 5px;
   grid-column-start: 1;
-  grid-column-end: 4;
-  grid-row-start: 9;
-  grid-row-end: 10;
+  grid-column-end: 3;
+  grid-row-start: 4;
+  grid-row-end: 5;
   background-color: rgb(173, 216, 230);
 }
   
