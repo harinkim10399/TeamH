@@ -155,18 +155,18 @@ button {
 
   body {
     text-align: center;
-    width: auto;
+    width: 100vw;
     height: auto;
     margin: 0;
     display: grid;
-    grid-template-columns: 33% 34% 33%;
-    grid-template-rows: 30% 30% 40% 20% 30%;
+    grid-template-columns: 100vw;
+    grid-template-rows: 35vh 65vh auto auto auto;
     
   }
   #naving {
     border-radius: 5px;
     grid-column-start: 1;
-    grid-column-end: 4;
+    grid-column-end: 2;
     grid-row-start: 1;
     grid-row-end: 2;
     background-color: black;
@@ -177,7 +177,7 @@ button {
     position:relative;
     border-radius: 5px;
     grid-column-start: 1;
-    grid-column-end: 4;
+    grid-column-end: 2;
     grid-row-start: 2;
     grid-row-end: 3;
     background-color: rgb(173, 216, 230);
@@ -186,7 +186,7 @@ button {
   #rightParameterUI {
     border-radius: 5px;
     grid-column-start: 1;
-    grid-column-end: 4;
+    grid-column-end: 2;
     grid-row-start: 3;
     grid-row-end: 4;
     padding-bottom: 30px;
@@ -196,7 +196,7 @@ button {
   #rightDrawingUI {
     border-radius: 5px;
     grid-column-start: 1;
-    grid-column-end: 4;
+    grid-column-end: 2;
     grid-row-start: 3;
     grid-row-end: 4;
     background-color: rgb(173, 216, 230);
@@ -205,7 +205,7 @@ button {
   #lowerControlUI {
     border-radius: 5px;
     grid-column-start: 1;
-    grid-column-end: 4;
+    grid-column-end: 2;
     grid-row-start: 4;
     grid-row-end: 5;
     background-color: rgb(173, 216, 230);
@@ -215,7 +215,7 @@ button {
     padding: 30px;
     border-radius: 5px;
     grid-column-start: 1;
-    grid-column-end: 4;
+    grid-column-end: 2;
     grid-row-start: 5;
     grid-row-end: 6;
     background-color: rgb(173, 216, 230);
