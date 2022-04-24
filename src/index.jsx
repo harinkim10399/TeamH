@@ -170,7 +170,7 @@ class App extends React.Component {
   render() {
     switch (this.state.page) {
       case 'RET':
-        return (<><Navbar togglePage={this.togglePage} /><Canvas jQuery={this.state.page} /><RightDrawingUI /><LowerControlUI jQuery={this.state.page} /><Footer jQuery={this.state.page}/></>)
+        return (<><Navbar togglePage={this.togglePage} /><Canvas jQuery={this.state.page} /><RightDrawingUI /><LowerControlUI jQuery={this.state.page} /><Footer jQuery={this.state.page} /></>)
         break;
       case 'Diff. Drive':
         return (<><Navbar toggleResetParameters={this.toggleResetParameters} togglePage={this.togglePage} /><Canvas
@@ -184,7 +184,7 @@ class App extends React.Component {
             onLeftWheelRadiusChange={this.handleLeftWheelRadiusChange}
             onRightWheelRadiusChange={this.handleRightWheelRadiusChange}
             onDistBetweenWheelsChange={this.handleDistBetweenWheelsChange}
-            jQuery={this.state.page} /><LowerControlUI jQuery={this.state.page} toggleResetParameters={this.toggleResetParameters} /><Footer jQuery={this.state.page}/></>)
+            jQuery={this.state.page} /><LowerControlUI jQuery={this.state.page} toggleResetParameters={this.toggleResetParameters} /><Footer jQuery={this.state.page} /></>)
         break;
       case 'Bicycle':
         return (<><Navbar togglePage={this.togglePage} /><Canvas jQuery={this.state.page}
@@ -197,7 +197,7 @@ class App extends React.Component {
             onSteeringAngleChange={this.handleSteeringAngleChange}
             onFrontWheelRadiusChange={this.handleFrontWheelRadiusChange}
             onDistFrontToBackChange={this.handleDistFrontToBackChange}
-            jQuery={this.state.page} /><LowerControlUI jQuery={this.state.page} toggleResetParameters={this.toggleResetParameters} /><Footer jQuery={this.state.page}/></>)
+            jQuery={this.state.page} /><LowerControlUI jQuery={this.state.page} toggleResetParameters={this.toggleResetParameters} /><Footer jQuery={this.state.page} /></>)
         break;
       case 'Tricycle':
         return (<><Navbar togglePage={this.togglePage} /><Canvas
@@ -211,7 +211,7 @@ class App extends React.Component {
             onDistBackTwoWheelsChange={this.handleDistBackTwoWheelsChange}
             onFrontWheelRadiusChange={this.handleFrontWheelRadiusChange}
             onDistFrontToBackChange={this.handleDistFrontToBackChange}
-            jQuery={this.state.page} /><LowerControlUI jQuery={this.state.page} toggleResetParameters={this.toggleResetParameters} /><Footer jQuery={this.state.page}/></>)
+            jQuery={this.state.page} /><LowerControlUI jQuery={this.state.page} toggleResetParameters={this.toggleResetParameters} /><Footer jQuery={this.state.page} /></>)
         break;
       default:
         return (<><Navbar togglePage={this.togglePage} /><HomePage /></>)
@@ -222,9 +222,9 @@ class App extends React.Component {
 class HomePage extends React.Component {
   render() {
     return (<div class="center">
-      <p>Welcome to the Interactive Robotics Education Tool! This web application is designed to help visualize some important robotics concepts through hands-on manipulation.  
-         To begin, click on the Navbar above either on "Pathfinding Algorithms" or on "Motion Models". 
-      <br></br><br></br>Application developed by Avery Clark, Felimon Holland, Adam Nguyen, and Owen Zook for COMP523, Spring 2022. Visit our website for the project <a target = "_blank" href = "https://tarheels.live/comp523teaml/"><b>here</b></a></p>
+      <p>Welcome to the Interactive Robotics Education Tool! This web application is designed to help visualize some important robotics concepts through hands-on manipulation.
+        To begin, click on the Navbar above either on "Pathfinding Algorithms" or on "Motion Models".
+        <br></br><br></br>Application developed by Avery Clark, Felimon Holland, Adam Nguyen, and Owen Zook for COMP523, Spring 2022. Visit our website for the project <a target="_blank" href="https://tarheels.live/comp523teaml/"><b>here</b></a></p>
     </div>)
   }
 }
@@ -244,7 +244,7 @@ class Navbar extends React.Component {
       <nav class="navbar navbar-inverse">
         <div class="container-fluid">
           <div class="navbar-header">
-            <a class="navbar-brand" onClick = {this.togglePage} name = "HomePage">Interactive Robotics Education Tool</a>
+            <a class="navbar-brand" onClick={this.togglePage} name="HomePage">Interactive Robotics Education Tool</a>
           </div>
           <ul class="nav navbar-nav">
             <li class="dropdown">
@@ -281,8 +281,8 @@ class Canvas extends React.Component {
     function establishCanvas() {
       var div = document.getElementById("canvasSpace");
       var canvas = document.createElement('canvas');
-      var sizeWidth = 80 * window.innerWidth / 100,
-        sizeHeight = 60 * window.innerHeight / 100 || 766;
+      var sizeWidth = 72 * window.innerWidth / 100,
+        sizeHeight = 59 * window.innerHeight / 100;
       canvas.width = sizeWidth;
       canvas.height = sizeHeight;
       document.getElementById("canvas").remove();
@@ -415,7 +415,7 @@ class Canvas extends React.Component {
       setGoal = false;
     };
     function drawObstacle(e) {
-     // Does: tell the browser we're handling this event
+      // Does: tell the browser we're handling this event
       e.preventDefault();
       e.stopPropagation();
       var mouseX = parseInt(e.clientX - offsetX);
@@ -471,7 +471,7 @@ class Canvas extends React.Component {
         context.fill();
 
       }
-    
+
       context.lineWidth = 2;
     }
 
@@ -528,12 +528,12 @@ class Canvas extends React.Component {
             //draw path from last part of array 
             //call prev until it its null
             var node = go[1];
-    
+
 
             node = node.nodes[node.nodes.length - 1];
-            
+
             var nodeNext = node.prev;
-        
+
             while (nodeNext != null) {
 
               drawFullPath(node.x, node.y, nodeNext.x, nodeNext.y);
@@ -578,7 +578,7 @@ class Canvas extends React.Component {
       }
     }
 
-  
+
 
 
     //return if the distance is greater
@@ -660,7 +660,7 @@ class Canvas extends React.Component {
 
     }
     function drawFullPath(x, y, x1, y1,) {
-    
+
       x = parseInt(x);
       y = parseInt(y);
       x1 = parseInt(x1);
@@ -695,7 +695,7 @@ class Canvas extends React.Component {
       x1 = parseInt(x1);
       y1 = parseInt(y1);
 
-     
+
       context.beginPath();
       context.moveTo(x, y);
       context.lineTo(x1, y1);
@@ -1399,29 +1399,29 @@ class RightDrawingUI extends React.Component {
 //footers for added information
 class Footer extends React.Component {
   render() {
-    switch(this.props.jQuery) {
+    switch (this.props.jQuery) {
       case 'RET':
-        return (<div id = "foot">How to get started <br></br><br></br><p>To get started, click on the button labeled <strong>"Click to set start"</strong> and lay down a start marker (colored blue) on the canvas. Then, click the button labeled <strong>"Click to set goal"</strong> and set down a goal marker (colored green) on the canvas. Finally, you can draw arbitrary obstacles on the canvas by clicking on the canvas itself and moving your cursor and clicking on another point in the canvas. After you have finished drawing arbitrary obstacles on the canvas, click the play button in the component labeled <strong>"Simulation Control"</strong> to watch RRT do its magic. During the running of RRT, you can pause it, reset it (clear the canvas of all things), or hit the <strong>"1 step"</strong> button.
-        This will slow down execution of RRT to only one iteration at a time. You can continue clicking <strong>"1 Step"</strong> after this point or clicking the play button. <strong>Note that after the optimal path is found, you can continue to run the algorithm by hitting the play button or the 1 Step button.</strong> Remember, at any time if you feel like heading back to the home page, you can click
-        the title <strong>"Interactive Robotics Education Tool"</strong>. Otherwise, click on <strong>"Motion Models"</strong> in the Navbar to explore other parts of the IRET.</p></div>)
+        return (<div id="foot">How to get started <br></br><br></br><p>To get started, click on the button labeled <strong>"Click to set start"</strong> and lay down a start marker (colored blue) on the canvas. Then, click the button labeled <strong>"Click to set goal"</strong> and set down a goal marker (colored green) on the canvas. Finally, you can draw arbitrary obstacles on the canvas by clicking on the canvas itself and moving your cursor and clicking on another point in the canvas. After you have finished drawing arbitrary obstacles on the canvas, click the play button in the component labeled <strong>"Simulation Control"</strong> to watch RRT do its magic. During the running of RRT, you can pause it, reset it (clear the canvas of all things), or hit the <strong>"1 step"</strong> button.
+          This will slow down execution of RRT to only one iteration at a time. You can continue clicking <strong>"1 Step"</strong> after this point or clicking the play button. <strong>Note that after the optimal path is found, you can continue to run the algorithm by hitting the play button or the 1 Step button.</strong> Remember, at any time if you feel like heading back to the home page, you can click
+          the title <strong>"Interactive Robotics Education Tool"</strong>. Otherwise, click on <strong>"Motion Models"</strong> in the Navbar to explore other parts of the IRET.</p></div>)
         break;
       case 'Diff. Drive':
-        return (<div id = "foot">How to get started <br></br><br></br><p>To get started, enter valid numbers into all of the inputs you see on the screen. Any number not in the bounds listed beside the label of each input is invalid and will be ignored and will not factor into the rendering of the motion model. In addition, the motion model will not run until you have entered valid numbers into all of the inputs. 
+        return (<div id="foot">How to get started <br></br><br></br><p>To get started, enter valid numbers into all of the inputs you see on the screen. Any number not in the bounds listed beside the label of each input is invalid and will be ignored and will not factor into the rendering of the motion model. In addition, the motion model will not run until you have entered valid numbers into all of the inputs.
           In addition, you can also play (effect will take place only after you have hit the pause button) the running of the motion model, you can pause it, and you can reset it in the component labeled <strong>"Simulation Control"</strong>. Keep in mind that by hitting the <strong>"Reset"</strong> button you will erase what's on the canvas and will reset all parameters to 0.
           Remember, at any time if you feel like heading back to the home page, you can click
-        the title <strong>"Interactive Robotics Education Tool"</strong>. Otherwise, click on <strong>"Motion Models"</strong> in the Navbar to explore the Bicycle and Tricycle Motion Models or <strong>"Pathfinding Algorithm"</strong> to explore RRT. <strong>Finally, note that your motion model will stop once it hits the edge of the canvas.</strong></p> <p>Another thing to note is that the right wheel starts towards the bottom of the screen for differential drive whereas the left wheel starts towards the top</p></div>)
+          the title <strong>"Interactive Robotics Education Tool"</strong>. Otherwise, click on <strong>"Motion Models"</strong> in the Navbar to explore the Bicycle and Tricycle Motion Models or <strong>"Pathfinding Algorithm"</strong> to explore RRT. <strong>Finally, note that your motion model will stop once it hits the edge of the canvas.</strong></p> <p>Another thing to note is that the right wheel starts towards the bottom of the screen for differential drive whereas the left wheel starts towards the top</p></div>)
         break;
       case 'Bicycle':
-        return (<div id = "foot">How to get started <br></br><br></br><p>To get started, enter valid numbers into all of the inputs you see on the screen. Any number not in the bounds listed beside the label of each input will be ignored and will not factor into the rendering of the motion model. In addition, the motion model will not run until you have entered valid numbers into all of the inputs. 
-        In addition, you can also play (effect will take place only after you have hit the pause button) the running of the motion model, you can pause it, and you can reset it in the component labeled <strong>"Simulation Control"</strong>. Keep in mind that by hitting the <strong>"Reset"</strong> button you will erase what's on the canvas and will reset all parameters to 0.
-        Remember, at any time if you feel like heading back to the home page, you can click
-      the title <strong>"Interactive Robotics Education Tool"</strong>. Otherwise, click on <strong>"Motion Models"</strong> in the Navbar to explore the Differential Drive and Tricycle Motion Models or <strong>"Pathfinding Algorithm"</strong> to explore RRT. <strong>Finally, note that your motion model will stop once it hits the edge of the canvas.</strong> </p></div>)
+        return (<div id="foot">How to get started <br></br><br></br><p>To get started, enter valid numbers into all of the inputs you see on the screen. Any number not in the bounds listed beside the label of each input will be ignored and will not factor into the rendering of the motion model. In addition, the motion model will not run until you have entered valid numbers into all of the inputs.
+          In addition, you can also play (effect will take place only after you have hit the pause button) the running of the motion model, you can pause it, and you can reset it in the component labeled <strong>"Simulation Control"</strong>. Keep in mind that by hitting the <strong>"Reset"</strong> button you will erase what's on the canvas and will reset all parameters to 0.
+          Remember, at any time if you feel like heading back to the home page, you can click
+          the title <strong>"Interactive Robotics Education Tool"</strong>. Otherwise, click on <strong>"Motion Models"</strong> in the Navbar to explore the Differential Drive and Tricycle Motion Models or <strong>"Pathfinding Algorithm"</strong> to explore RRT. <strong>Finally, note that your motion model will stop once it hits the edge of the canvas.</strong> </p></div>)
         break;
       case 'Tricycle':
-        return (<div id = "foot">How to get started <br></br><br></br><p>To get started, enter valid numbers into all of the inputs you see on the screen. Any number not in the bounds listed beside the label of each input will be ignored and will not factor into the rendering of the motion model. In addition, the motion model will not run until you have entered valid numbers into all of the inputs. 
-        In addition, you can also play (effect will take place only after you have hit the pause button) the running of the motion model, you can pause it, and you can reset it in the component labeled <strong>"Simulation Control"</strong>. Keep in mind that by hitting the <strong>"Reset"</strong> button you will erase what's on the canvas and will reset all parameters to 0.
-        Remember, at any time if you feel like heading back to the home page, you can click
-      the title <strong>"Interactive Robotics Education Tool"</strong>. Otherwise, click on <strong>"Motion Models"</strong> in the Navbar to explore the Differential Drive and Bicycle Motion Models or <strong>"Pathfinding Algorithm"</strong> to explore RRT. <strong>Finally, note that your motion model will stop once it hits the edge of the canvas.</strong></p></div>)
+        return (<div id="foot">How to get started <br></br><br></br><p>To get started, enter valid numbers into all of the inputs you see on the screen. Any number not in the bounds listed beside the label of each input will be ignored and will not factor into the rendering of the motion model. In addition, the motion model will not run until you have entered valid numbers into all of the inputs.
+          In addition, you can also play (effect will take place only after you have hit the pause button) the running of the motion model, you can pause it, and you can reset it in the component labeled <strong>"Simulation Control"</strong>. Keep in mind that by hitting the <strong>"Reset"</strong> button you will erase what's on the canvas and will reset all parameters to 0.
+          Remember, at any time if you feel like heading back to the home page, you can click
+          the title <strong>"Interactive Robotics Education Tool"</strong>. Otherwise, click on <strong>"Motion Models"</strong> in the Navbar to explore the Differential Drive and Bicycle Motion Models or <strong>"Pathfinding Algorithm"</strong> to explore RRT. <strong>Finally, note that your motion model will stop once it hits the edge of the canvas.</strong></p></div>)
         break;
     }
   }
