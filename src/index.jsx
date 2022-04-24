@@ -281,8 +281,15 @@ class Canvas extends React.Component {
     function establishCanvas() {
       var div = document.getElementById("canvasSpace");
       var canvas = document.createElement('canvas');
-      var sizeWidth = 80 * window.innerWidth / 100,
-        sizeHeight = 62 * window.innerHeight / 100;
+      if (window.innerWidth <= 700) {
+        var sizeWidth = 100 * window.innerWidth / 100,
+          sizeHeight = 65 * window.innerHeight / 100;
+      } else {
+        var sizeWidth = 80 * window.innerWidth / 100,
+          sizeHeight = 62 * window.innerHeight / 100;
+      }
+
+
       canvas.width = sizeWidth;
       canvas.height = sizeHeight;
       document.getElementById("canvas").remove();
