@@ -1003,6 +1003,7 @@ class Canvas extends React.Component {
     ctx.transform(1, 0, 0, -1, 0, canvas.height);
     ctx2.transform(1, 0, 0, -1, 0, canvas.height);
     function concept() {
+
       //Does: Sets Focul point to center of canvas
 
       //Pause when off screen
@@ -1026,31 +1027,44 @@ class Canvas extends React.Component {
         var cPos = trike.main();
         startX = cPos[0];
         startY = cPos[1];
-        var theta = cPos[2] - Math.PI / 2;
+        var theta = cPos[2];
 
         //front wheel
-        drawWheel(startX - 5, startY, frontWheelRadius * 0.3, distFrontToBack / 3.5, steeringAngle, theta, distFrontToBack);
+        drawWheel(startX, startY, frontWheelRadius, distFrontToBack / 4, steeringAngle, theta, distFrontToBack);
         //back left wheel
-        drawWheels(startX, startY, frontWheelRadius * 0.3, distFrontToBack / 4, steeringAngle, theta, -distBackTwoWheels / 3, distFrontToBack * -1);
+        drawWheels(startX, startY, frontWheelRadius, distFrontToBack / 4, steeringAngle, theta, -distBackTwoWheels, distFrontToBack);
         //back right wheel
-        drawWheels(startX, startY, frontWheelRadius * 0.3, distFrontToBack / 4, steeringAngle, theta, distBackTwoWheels / 3, distFrontToBack * -1);
+        drawWheels(startX, startY, frontWheelRadius, -distFrontToBack / 4, steeringAngle, theta, distBackTwoWheels, distFrontToBack);
+
+
         drawBody(startX, startY, distFrontToBack, distFrontToBack / 4, theta);
-        drawBackRectangle(startX, startY, distFrontToBack / 2, distBackTwoWheels, theta)
+        drawBackRectangle(startX, startY, distFrontToBack / 4, distBackTwoWheels, theta, distFrontToBack)
         drawTrail(startX, startY);
+
+
+
+
       }
-      function drawBackRectangle(x, y, height, width, theta) {
-        var bodyX = -width / 3;
-        var bodyY = -height;
+      // drawBackRectangle(startX, startY, distFrontToBack / 4, distBackTwoWheels, theta)
+      function drawBackRectangle(x, y, thick, length, theta, offset) {
+
+        var bodyY = length / 2;
         ctx.save();
         ctx.beginPath();
         ctx.translate(x, y);
+
         ctx.rotate(theta);
-        ctx.rect(bodyX, bodyY, distBackTwoWheels / 1.5, height / 4);
+        ctx.translate(-offset / 2, 0);
+
+
+        ctx.rect(0, -bodyY, thick, length);
         ctx.fillStyle = "purple";
         ctx.fill();
         ctx.restore();
       }
-      function drawWheels(x, y, height, width, steeringAngles, theta, offset1, offset) {
+
+      //drawWheels(startX, startY, frontWheelRadius , distFrontToBack / 4, steeringAngle, theta, distBackTwoWheels , distFrontToBack);
+      function drawWheels(x, y, radius, thick, steeringAngles, theta, offset1, offset2) {
         // first save the untranslated/unrotated context
         ctx.save();
         ctx.beginPath();
@@ -1058,16 +1072,21 @@ class Canvas extends React.Component {
         ctx.translate(x, y);
         ctx.rotate(theta);
         //Center is now  0, 0 + offset / 2, now offset for size of box 
-        ctx.translate(offset1, 0 + offset / 2);
-        ctx.rotate(steeringAngles * Math.PI / 180);
+        ctx.translate(-offset2 / 2, offset1 / 2);
+        // ctx.rotate(steeringAngles * Math.PI / 180);
         // Note: after transforming [0,0] is visually [x,y] so the rect needs to be offset accordingly when drawn
-        ctx.rect(-width / 2, -height / 2, width, height);
+        //ctx.arc(thick / 2, radius/2, 2, 0, 2 * Math.PI);
+        //ctx.arc(0, 0, 2, 0, 2 * Math.PI);
+
+        ctx.rect(-radius / 2 + Math.abs(thick / 2), 0, radius, thick);
+
         ctx.fillStyle = "red";
         ctx.fill();
         // restore the context to its untranslated/unrotated state
         ctx.restore();
       }
-      //check rotation
+
+      //wheelCenter(startX, startY, DistFrontToBack);
       function drawTrail(x, y) {
 
         ctx2.beginPath()
@@ -1078,19 +1097,22 @@ class Canvas extends React.Component {
       }
 
       function drawBody(x, y, height, width, theta) {
-        var bodyX = -width / 2;
-        var bodyY = -height / 2;
+        var bodyX = -height / 2;
+
+        var bodyY = -width / 2;
         ctx.save();
         ctx.beginPath();
         ctx.translate(x, y);
         ctx.rotate(theta);
-        ctx.rect(bodyX, bodyY, width, height);
+
+        ctx.rect(bodyX, bodyY, height, width);
         ctx.fillStyle = "blue";
         ctx.fill();
         ctx.restore();
       }
+      // drawWheel(startX , startY, frontWheelRadius , distFrontToBack, steeringAngle, theta, distFrontToBack);
+      function drawWheel(x, y, length, thick, steeringAngles, theta, offset) {
 
-      function drawWheel(x, y, height, width, steeringAngles, theta, offset) {
         // first save the untranslated/unrotated context
         ctx.save();
         ctx.beginPath();
@@ -1098,10 +1120,10 @@ class Canvas extends React.Component {
         ctx.translate(x, y);
         ctx.rotate(theta);
         //Center is now  0, 0 + offset / 2, now offset for size of box 
-        ctx.translate(0, 0 + offset / 2);
+        ctx.translate(0 + offset / 2, 0);
         ctx.rotate(steeringAngles * Math.PI / 180);
         // Note: after transforming [0,0] is visually [x,y] so the rect needs to be offset accordingly when drawn
-        ctx.rect(-width / 2, -height / 2, width, height);
+        ctx.rect(-length / 2, -thick / 2, length, thick);
         ctx.fillStyle = "red";
         ctx.fill();
         // restore the context to its untranslated/unrotated state
